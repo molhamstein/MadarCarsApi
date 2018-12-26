@@ -1,0 +1,154 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "madarDB",
+    "public": false
+  },
+  "AccessToken": {
+    "dataSource": "madarDB",
+    "public": false,
+    "relations": {
+      "user": {
+        "type": "belongsTo",
+        "model": "user",
+        "foreignKey": "userId"
+      }
+    }
+  },
+  "ACL": {
+    "dataSource": "madarDB",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "madarDB",
+    "public": false,
+    "options": {
+      "strictObjectIDCoercion": true
+    }
+  },
+  "Role": {
+    "dataSource": "madarDB",
+    "public": false
+  },
+  "country": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "user": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "media": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "uploadFile": {
+    "dataSource": "files",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "upload": true,
+          "download": true
+        }
+      }
+    }
+  },
+  "location": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "brand": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "subLocation": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "driver": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "car": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "admin": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "Email": {
+    "dataSource": "email"
+  },
+  "locationMedia": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "carMedia": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "carSublocation": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "trip": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "tripSublocation": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "bookingCar": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "invoiceType": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "invoice": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "innerInvoice": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "outerInvoice": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "predefinedTrips": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "predefinedTripsMedia": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "predefinedTripsSublocation": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "rate": {
+    "dataSource": "madarDB",
+    "public": true
+  }
+}

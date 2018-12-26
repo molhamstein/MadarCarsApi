@@ -1,0 +1,220 @@
+{
+  "name": "car",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "replaceOnPUT": false,
+  "scope": {
+    "include": [
+      {
+        "relation": "brand"
+      },
+      {
+        "relation": "location"
+      },
+      {
+        "relation": "driver"
+      },
+      {
+        "relation": "carMedia"
+      },
+      {
+        "relation": "carSublocations"
+      }
+    ]
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "rate": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "numRateing": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "numOfSeat": {
+      "type": "number",
+      "required": true
+    },
+    "is_VIP": {
+      "type": "boolean",
+      "required": true
+    },
+    "priceBerDay": {
+      "type": "number",
+      "required": true
+    },
+    "priceoneWay": {
+      "type": "number",
+      "required": true
+    },
+    "pricetowWay": {
+      "type": "number",
+      "required": true
+    },
+    "productionDate": {
+      "type": "date",
+      "required": true
+    },
+    "EngineType": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "isAirportCar": {
+      "type": "boolean",
+      "required": true
+    },
+    "isCityCar": {
+      "type": "boolean",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "default": "active"
+    },
+    "createdAt": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "brand": {
+      "type": "belongsTo",
+      "model": "brand",
+      "foreignKey": "brandId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "location": {
+      "type": "belongsTo",
+      "model": "location",
+      "foreignKey": "locationId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "driver": {
+      "type": "belongsTo",
+      "model": "driver",
+      "foreignKey": "driverId"
+    },
+    "carMedia": {
+      "type": "hasMany",
+      "model": "media",
+      "foreignKey": "carId",
+      "options": {
+        "nestRemoting": true
+      },
+      "through": "carMedia"
+    },
+    "carSublocations": {
+      "type": "hasMany",
+      "model": "carSublocation",
+      "foreignKey": "carId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "deactivate"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "activate"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "getAvailable"
+    }
+  ],
+  "methods": {
+    "getAvailable": {
+      "accepts": [
+        {
+          "arg": "flags",
+          "type": "object",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "dates",
+          "type": "object",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "locationId",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "filter",
+          "type": "object",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/getAvailable",
+          "verb": "get"
+        }
+      ]
+    }
+  }
+}

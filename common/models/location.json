@@ -1,0 +1,111 @@
+{
+  "name": "location",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "replaceOnPUT": false,
+  "scope": {
+    "include": [
+      {
+        "relation": "media"
+      },
+      {
+        "relation": "slideMedia"
+      }
+    ]
+  },
+  "properties": {
+    "descriptionEn": {
+      "type": "string",
+      "required": true
+    },
+    "descriptionAr": {
+      "type": "string",
+      "required": true
+    },
+    "nameEn": {
+      "type": "string",
+      "required": true
+    },
+    "nameAr": {
+      "type": "string",
+      "required": true
+    },
+    "color1": {
+      "type": "string",
+      "required": true
+    },
+    "color2": {
+      "type": "string",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "default": "active"
+    },
+    "createdAt": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "media": {
+      "type": "belongsTo",
+      "model": "media",
+      "foreignKey": "mediaId"
+    },
+    "subLocations": {
+      "type": "hasMany",
+      "model": "subLocation",
+      "foreignKey": "locationId"
+    },
+    "slideMedia": {
+      "type": "hasMany",
+      "model": "media",
+      "foreignKey": "locationId",
+      "options": {
+        "nestRemoting": true
+      },
+      "through": "locationMedia"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "deactivate"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "activate"
+    }
+  ],
+  "methods": {}
+}

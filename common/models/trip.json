@@ -1,0 +1,268 @@
+{
+  "name": "trip",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "replaceOnPUT": false,
+  "scope": {
+    "include": [
+      {
+        "relation": "owner"
+      },
+      {
+        "relation": "car"
+      },
+      {
+        "relation": "location"
+      },
+      {
+        "relation": "tripSublocations"
+      },
+      {
+        "relation": "innerInvoices"
+      },
+      {
+        "relation": "outerInvoices"
+      }
+    ]
+  },
+  "properties": {
+    "status": {
+      "type": "string",
+      "required": true,
+      "default": "pending"
+    },
+    "type": {
+      "type": "string"
+    },
+    "cost": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "fromAirportDate": {
+      "type": "date"
+    },
+    "fromAirport": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "toAirportDate": {
+      "type": "date"
+    },
+    "toAirport": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "startInCityDate": {
+      "type": "date"
+    },
+    "endInCityDate": {
+      "type": "date"
+    },
+    "inCity": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "createdAt": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "owner": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "ownerId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "car": {
+      "type": "belongsTo",
+      "model": "car",
+      "foreignKey": "carId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "location": {
+      "type": "belongsTo",
+      "model": "location",
+      "foreignKey": "locationId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "tripSublocations": {
+      "type": "hasMany",
+      "model": "tripSublocation",
+      "foreignKey": "tripId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "innerInvoices": {
+      "type": "hasOne",
+      "model": "innerInvoice",
+      "foreignKey": "tripId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "outerInvoices": {
+      "type": "hasOne",
+      "model": "outerInvoice",
+      "foreignKey": "tripId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "getMyTrip"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "changeStatus"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "changemyTripStatus"
+    }
+  ],
+  "methods": {
+    "getMyTrip": {
+      "accepts": [
+        {
+          "arg": "req",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "req"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/getMyTrip",
+          "verb": "get"
+        }
+      ]
+    },
+    "changeStatus": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        },
+        {
+          "arg": "newStatus",
+          "type": "string",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/changeStatus/:id",
+          "verb": "put"
+        }
+      ]
+    },
+    "changemyTripStatus": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        },
+        {
+          "arg": "newStatus",
+          "type": "string",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/changemyTripStatus/:id",
+          "verb": "put"
+        }
+      ]
+    }
+  }
+}

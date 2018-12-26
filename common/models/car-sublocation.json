@@ -1,0 +1,42 @@
+{
+  "name": "carSublocation",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "scope": {
+    "include": [
+      {
+        "relation": "subLocation"
+      }
+    ]
+  },
+  "properties": {
+    "cost": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "car": {
+      "type": "belongsTo",
+      "model": "car",
+      "foreignKey": "carId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "subLocation": {
+      "type": "belongsTo",
+      "model": "subLocation",
+      "foreignKey": "subLocationId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

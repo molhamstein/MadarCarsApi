@@ -1,0 +1,102 @@
+{
+  "name": "predefinedTrips",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "replaceOnPUT": false,
+  "scope": {
+    "include": [
+      {
+        "relation": "media"
+      },
+      {
+        "relation": "location"
+      },
+      {
+        "relation": "predefinedTripsMedia"
+      },
+      {
+        "relation": "predefinedTripsSublocations"
+      }
+    ]
+  },
+  "properties": {
+    "createdAt": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "default": "active"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "predefinedTripsMedia": {
+      "type": "hasMany",
+      "model": "media",
+      "foreignKey": "predefinedTripId",
+      "options": {
+        "nestRemoting": true
+      },
+      "through": "predefinedTripsMedia"
+    },
+    "location": {
+      "type": "belongsTo",
+      "model": "location",
+      "foreignKey": "locationId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "media": {
+      "type": "belongsTo",
+      "model": "media",
+      "foreignKey": "mediaId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "predefinedTripsSublocations": {
+      "type": "hasMany",
+      "model": "predefinedTripsSublocation",
+      "foreignKey": "predefinedTripId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "deactivate"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "activate"
+    }
+  ],
+  "methods": {}
+}

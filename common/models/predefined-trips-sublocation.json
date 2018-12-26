@@ -1,0 +1,42 @@
+{
+  "name": "predefinedTripsSublocation",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "scope": {
+    "include": [
+      {
+        "relation": "subLocation"
+      }
+    ]
+  },
+  "properties": {
+    "duration": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "subLocation": {
+      "type": "belongsTo",
+      "model": "subLocation",
+      "foreignKey": "sublocationId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "predefinedTrips": {
+      "type": "belongsTo",
+      "model": "predefinedTrips",
+      "foreignKey": "predefinedTripId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

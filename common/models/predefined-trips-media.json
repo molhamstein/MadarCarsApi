@@ -1,0 +1,30 @@
+{
+  "name": "predefinedTripsMedia",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "validations": [],
+  "relations": {
+    "media": {
+      "type": "belongsTo",
+      "model": "media",
+      "foreignKey": "mediaId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "predefinedTrips": {
+      "type": "belongsTo",
+      "model": "predefinedTrips",
+      "foreignKey": "predefinedTripId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

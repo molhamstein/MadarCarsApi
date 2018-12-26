@@ -1,0 +1,51 @@
+{
+  "name": "innerInvoice",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "scope": {
+    "include": [
+      {
+        "relation": "invoices"
+      }
+    ]
+  },
+  "properties": {
+    "createdAt": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "invoices": {
+      "type": "hasMany",
+      "model": "invoice",
+      "foreignKey": "innerId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "trip": {
+      "type": "belongsTo",
+      "model": "trip",
+      "foreignKey": "tripId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "add"
+    }
+  ],
+  "methods": {}
+}
