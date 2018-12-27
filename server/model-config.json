@@ -150,5 +150,13 @@
   "rate": {
     "dataSource": "madarDB",
     "public": true
+  },
+  "language": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "driverLang": {
+    "dataSource": "madarDB",
+    "public": true
   }
 }

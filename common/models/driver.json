@@ -13,6 +13,13 @@
     "emailVerified",
     "realm"
   ],
+  "scope": {
+    "include": [
+      {
+        "relation": "driverLangs"
+      }
+    ]
+  },
   "properties": {
     "firstName": {
       "type": "string",
@@ -30,10 +37,6 @@
       "type": "string",
       "required": false
     },
-    "language": {
-      "type": "object",
-      "required": true
-    },
     "status": {
       "type": "string",
       "default": "active"
@@ -49,7 +52,16 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "driverLangs": {
+      "type": "hasMany",
+      "model": "driverLang",
+      "foreignKey": "driverId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
   "acls": [
     {
       "accessType": "*",

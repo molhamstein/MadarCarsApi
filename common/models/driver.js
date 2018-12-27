@@ -1,6 +1,7 @@
 'use strict';
 var g = require('strong-globalize')();
 var debug = require('debug')('loopback:user');
+var _ = require('lodash');
 
 module.exports = function (Driver) {
   Driver.validatesInclusionOf('status', { in: ['active', 'deactive']
@@ -90,6 +91,47 @@ module.exports = function (Driver) {
     });
     return fn.promise;
   }
+
+  Driver.afterRemote('create', function (context, result, next) {
+    _.each(context.req.body.languages, oneLang => {
+      oneLang.driverId = result.id;
+    })
+    console.log(context.req.body.languages)
+    Driver.app.models.driverLang.create(context.req.body.languages, function (err, data) {
+      if (err)
+        return next(err);
+      next()
+    })
+  })
+
+  Driver.observe('before save', function (context, next) {
+    console.log("before save")
+    if (context.where == null)
+      next()
+    else {
+      if (context.data.languages != undefined) {
+        var driverId = context.where.id
+        Driver.app.models.driverLang.destroyAll({
+          "driverId": driverId
+        }, function (err, data) {
+          if (err)
+            return next(err);
+          _.each(context.data.languages, oneLang => {
+            oneLang.driverId = driverId;
+          })
+          console.log("languages")
+          console.log(context.data.languages)
+          Driver.app.models.driverLang.create(context.data.languages, function (err, data) {
+            if (err)
+              return next(err);
+            next()
+          })
+        })
+      } else
+        next()
+    }
+
+  })
 
 
 };

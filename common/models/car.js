@@ -16,6 +16,7 @@ module.exports = function (Car) {
 
 
   Car.afterRemote('create', function (context, result, next) {
+    // TODO add carSublocation like in edit
     _.each(context.req.body.carMedia, oneSlide => {
       oneSlide.carId = result.id;
     })
@@ -148,7 +149,7 @@ module.exports = function (Car) {
    * @param {Function(Error, array)} callback
    */
 
-  Car.getAvailable = function (flags, dates, locationId, filter, callback) {
+  Car.getAvailable = function (flags, dates, locationId, filter, langFilter, callback) {
 
     if (filter == null) {
       var filter = {}
@@ -161,7 +162,7 @@ module.exports = function (Car) {
       if (err)
         return callback(err, null)
       var object = fillDateOfBooking(flags, dates)
-      console.log(object.where)
+      // console.log(object.where)
       var carIDS = []
       _.each(cars, oneCar => {
         carIDS.push(oneCar.id);
@@ -179,8 +180,40 @@ module.exports = function (Car) {
       }, function (err, data) {
         if (err)
           return callback(err)
-        callback(null, data);
+        data.forEach(function (element) {
+          cars.splice(cars.findIndex(function (i) {
+            return i.id == element.carId;
+          }), 1);
+        }, this);
+        var popCarIds = [];
 
+        cars.forEach(function (oneCar, carIndex) {
+          oneCar.driver.get(function (err, driver) {
+            driver.driverLangs(function (err, data) {
+              langFilter.forEach(function (oneLangFilter, langIndex) {
+                var index =
+                  data.find(function (element) {
+                    return element.landuageId == oneLangFilter;
+                  });
+                if (index == undefined) {
+                  console.log("push Out")
+                  popCarIds.push(oneCar.id);
+                }
+                if (carIndex + 1 == cars.length && langIndex + 1 == langFilter.length) {
+                  console.log("test");
+                  console.log(popCarIds)
+                  popCarIds.forEach(function (element) {
+                    cars.splice(cars.findIndex(function (i) {
+                      return i.id == element;
+                    }), 1);
+                  }, this);
+                  return callback(null, cars);
+                }
+              }, this);
+            })
+
+          })
+        }, this);
       })
 
     })

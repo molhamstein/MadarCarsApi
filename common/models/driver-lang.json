@@ -1,0 +1,37 @@
+{
+  "name": "driverLang",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "scope": {
+    "include": [
+      {
+        "relation": "language"
+      }
+    ]
+  },
+  "properties": {},
+  "validations": [],
+  "relations": {
+    "driver": {
+      "type": "belongsTo",
+      "model": "driver",
+      "foreignKey": "driverId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "language": {
+      "type": "belongsTo",
+      "model": "language",
+      "foreignKey": "landuageId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

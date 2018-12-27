@@ -7,8 +7,7 @@
   },
   "replaceOnPUT": false,
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "brand"
       },
       {
@@ -131,8 +130,7 @@
       }
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -174,8 +172,7 @@
   ],
   "methods": {
     "getAvailable": {
-      "accepts": [
-        {
+      "accepts": [{
           "arg": "flags",
           "type": "object",
           "required": true,
@@ -198,23 +195,25 @@
           "type": "object",
           "required": false,
           "description": ""
-        }
-      ],
-      "returns": [
+        },
         {
-          "arg": "result",
+          "arg": "langFilter",
           "type": "array",
-          "root": true,
+          "required": false,
           "description": ""
         }
       ],
+      "returns": [{
+        "arg": "result",
+        "type": "array",
+        "root": true,
+        "description": ""
+      }],
       "description": "",
-      "http": [
-        {
-          "path": "/getAvailable",
-          "verb": "get"
-        }
-      ]
+      "http": [{
+        "path": "/getAvailable",
+        "verb": "get"
+      }]
     }
   }
 }

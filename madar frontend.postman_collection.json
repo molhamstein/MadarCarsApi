@@ -1,0 +1,506 @@
+{
+	"info": {
+		"_postman_id": "045f157c-1c49-45a8-a791-69a269f92499",
+		"name": "madar frontend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get me",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{userToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}users/me",
+							"host": [
+								"{{baseUrl}}users"
+							],
+							"path": [
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"anas95\",\r\n  \"phoneNumber\": \"00963957465876\",\r\n  \"ISOCode\": \"SY\",\r\n  \"password\":\"password\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}users",
+							"host": [
+								"{{baseUrl}}users"
+							]
+						},
+						"description": "username is unique"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"phoneNumber\": \"00963957465876\",\n\"password\":\"password\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login?include=user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "user"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login facebook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n\"socialId\":\"1948371978529342\",\r\n\"token\":\"EAAZAxJjZBFZCFgBALcFxTEWGjo08rePyH8eY9CZBogRDln9vMZCTvUfYn3GiBtX3buQ8nXWtrwxW1qe0quzRO1Ir4vRNzgi6dL62w2KcJHnvUczp5gzL19gDt15PtBPFueCgBmBzXCLZChqv30lmfhvmMzi1kQZBh6VFLZCFZAVKgqJMBppIBVAYufwunlzrq5tLM8axKtBgcYUz753sBTwpeeZAHM1RhfrNDP3ejs581mLgZDZD\",\r\n  \"username\": \"anoos95\",\r\n  \"phoneNumber\": \"00963957465877\",\r\n  \"ISOCode\": \"SY\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/facebookLogin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"facebookLogin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login google",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n\"socialId\":\"1948371978529342\",\r\n\"token\":\"EAAZAxJjZBFZCFgBALcFxTEWGjo08rePyH8eY9CZBogRDln9vMZCTvUfYn3GiBtX3buQ8nXWtrwxW1qe0quzRO1Ir4vRNzgi6dL62w2KcJHnvUczp5gzL19gDt15PtBPFueCgBmBzXCLZChqv30lmfhvmMzi1kQZBh6VFLZCFZAVKgqJMBppIBVAYufwunlzrq5tLM8axKtBgcYUz753sBTwpeeZAHM1RhfrNDP3ejs581mLgZDZD\",\r\n  \"username\": \"anoos95_G\",\r\n  \"phoneNumber\": \"00963957465878\",\r\n  \"ISOCode\": \"SY\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/googleLogin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"googleLogin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "location",
+			"item": [
+				{
+					"name": "get all location",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{userToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}locations?filter[include]=subLocations",
+							"host": [
+								"{{baseUrl}}locations"
+							],
+							"query": [
+								{
+									"key": "filter[include]",
+									"value": "subLocations"
+								}
+							]
+						},
+						"description": "loopback filter\nfilter = {\n\t\"where\":{},\n\t\"limit\":,\n\t\"offset\":\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "get one location",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}locations/5c1d04fc4d6a49446cb283e0?filter[include]=subLocations",
+							"host": [
+								"{{baseUrl}}locations"
+							],
+							"path": [
+								"5c1d04fc4d6a49446cb283e0"
+							],
+							"query": [
+								{
+									"key": "filter[include]",
+									"value": "subLocations"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "car",
+			"item": [
+				{
+					"name": "get available",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}cars/getAvailable?flags={\"fromAirport\":true,\"toAirportDate\":false,\"inCity\":true}&dates={\"fromAirportDate\":\"2018-12-25T00:08:15.244Z\",\"endInCityDate\":\"2018-12-28T00:11:15.244Z\"}&locationId=5c1c568353792423c40d27e9&filter={\"where\":{\"name\":\"I8\"}}&langFilter=[\"5c24a30c0bba3d3ba848c3ff\"]",
+							"host": [
+								"{{baseUrl}}cars"
+							],
+							"path": [
+								"getAvailable"
+							],
+							"query": [
+								{
+									"key": "flags",
+									"value": "{\"fromAirport\":true,\"toAirportDate\":false,\"inCity\":true}"
+								},
+								{
+									"key": "dates",
+									"value": "{\"fromAirportDate\":\"2018-12-25T00:08:15.244Z\",\"endInCityDate\":\"2018-12-28T00:11:15.244Z\"}"
+								},
+								{
+									"key": "locationId",
+									"value": "5c1c568353792423c40d27e9"
+								},
+								{
+									"key": "filter",
+									"value": "{\"where\":{\"name\":\"I8\"}}"
+								},
+								{
+									"key": "langFilter",
+									"value": "[\"5c24a30c0bba3d3ba848c3ff\"]"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trip",
+			"item": [
+				{
+					"name": "add trip",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{userToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fromAirport\": true,\r\n  \"fromAirportDate\": \"2018-12-24T09:00:00.872Z\",\r\n  \"toAirportDate\": \"2018-12-28T16:00:00.872Z\",\r\n  \"toAirport\": false,\r\n  \"startInCityDate\": \"2018-12-25T12:00:00.872Z\",\r\n  \"endInCityDate\": \"2018-12-28T12:00:00.872Z\",\r\n  \"inCity\": false,\r\n  \"carId\": \"5c1f99f4ed819f3214c0d604\",\r\n  \"locationId\": \"5c1c568353792423c40d27e9\",\r\n  \"tripSublocations\":[\r\n  \t{\r\n  \t\t\"sublocationId\":\"5c1f9118b9c38e15b4962e6c\",\r\n  \t\t\"duration\":\"5\"\r\n  \t}\r\n  \t]\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}trips",
+							"host": [
+								"{{baseUrl}}trips"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my trip",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{userToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fromAirport\": true,\r\n  \"fromAirportDate\": \"2018-12-24T09:00:00.872Z\",\r\n  \"toAirportDate\": \"2018-12-28T16:00:00.872Z\",\r\n  \"toAirport\": false,\r\n  \"startInCityDate\": \"2018-12-25T12:00:00.872Z\",\r\n  \"endInCityDate\": \"2018-12-28T12:00:00.872Z\",\r\n  \"inCity\": false,\r\n  \"carId\": \"5c1f99f4ed819f3214c0d604\",\r\n  \"locationId\": \"5c1c568353792423c40d27e9\",\r\n  \"tripSublocations\":[\r\n  \t{\r\n  \t\t\"sublocationId\":\"5c1f9118b9c38e15b4962e6c\",\r\n  \t\t\"duration\":\"5\"\r\n  \t}\r\n  \t]\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}trips/getMyTrip",
+							"host": [
+								"{{baseUrl}}trips"
+							],
+							"path": [
+								"getMyTrip"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change my trip status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"newStatus\": \"active\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/trips/changemyTripStatus/5c22012c505d334240953150",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"trips",
+								"changemyTripStatus",
+								"5c22012c505d334240953150"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "predefined trips",
+			"item": [
+				{
+					"name": "get all predefined trip",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}predefinedTrips",
+							"host": [
+								"{{baseUrl}}predefinedTrips"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "rate",
+			"item": [
+				{
+					"name": "add rate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{userToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"carId\":\"5c1f99f4ed819f3214c0d604\",\n\t\"tripId\":\"5c22012c505d334240953150\",\n\t\"value\":2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}rates/makeRate",
+							"host": [
+								"{{baseUrl}}rates"
+							],
+							"path": [
+								"makeRate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "language",
+			"item": [
+				{
+					"name": "get all language",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{userToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"carId\":\"5c1f99f4ed819f3214c0d604\",\n\t\"tripId\":\"5c22012c505d334240953150\",\n\t\"value\":2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}languages",
+							"host": [
+								"{{baseUrl}}languages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
