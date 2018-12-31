@@ -25,11 +25,19 @@
       "type": "string",
       "required": true
     },
+    "descriptionTr": {
+      "type": "string",
+      "required": true
+    },
     "nameEn": {
       "type": "string",
       "required": true
     },
     "nameAr": {
+      "type": "string",
+      "required": true
+    },
+    "nameTr": {
       "type": "string",
       "required": true
     },
