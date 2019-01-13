@@ -7,7 +7,8 @@
   },
   "replaceOnPUT": false,
   "scope": {
-    "include": [{
+    "include": [
+      {
         "relation": "brand"
       },
       {
@@ -21,6 +22,9 @@
       },
       {
         "relation": "carSublocations"
+      },
+      {
+        "relation": "media"
       }
     ]
   },
@@ -43,19 +47,19 @@
       "type": "number",
       "required": true
     },
-    "is_VIP": {
+    "isVip": {
       "type": "boolean",
       "required": true
     },
-    "priceBerDay": {
+    "pricePerDay": {
       "type": "number",
       "required": true
     },
-    "priceoneWay": {
+    "priceOneWay": {
       "type": "number",
       "required": true
     },
-    "pricetowWay": {
+    "priceTowWay": {
       "type": "number",
       "required": true
     },
@@ -63,7 +67,7 @@
       "type": "date",
       "required": true
     },
-    "EngineType": {
+    "engineType": {
       "type": "string",
       "required": true
     },
@@ -99,6 +103,11 @@
         "nestRemoting": true
       }
     },
+    "media": {
+      "type": "belongsTo",
+      "model": "media",
+      "foreignKey": "mediaId"
+    },
     "location": {
       "type": "belongsTo",
       "model": "location",
@@ -130,7 +139,8 @@
       }
     }
   },
-  "acls": [{
+  "acls": [
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -172,7 +182,8 @@
   ],
   "methods": {
     "getAvailable": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "flags",
           "type": "object",
           "required": true,
@@ -203,17 +214,21 @@
           "description": ""
         }
       ],
-      "returns": [{
-        "arg": "result",
-        "type": "array",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/getAvailable",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/getAvailable",
+          "verb": "get"
+        }
+      ]
     }
   }
 }

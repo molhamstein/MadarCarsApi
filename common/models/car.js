@@ -1,4 +1,6 @@
 'use strict';
+const numHoure = 2;
+
 const errors = require('../../server/errors');
 var _ = require('lodash');
 const type = ['fromAirport', 'city', 'toAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'cityAndToAirport', 'fromAirportAndCityAndToAirport']
@@ -11,7 +13,7 @@ module.exports = function (Car) {
   });
 
 
-  Car.validatesInclusionOf('EngineType', { in: ['manual', 'automatic']
+  Car.validatesInclusionOf('engineType', { in: ['manual', 'automatic']
   });
 
 
@@ -20,11 +22,20 @@ module.exports = function (Car) {
     _.each(context.req.body.carMedia, oneSlide => {
       oneSlide.carId = result.id;
     })
+    _.each(context.req.body.carSublocations, oneSublocation => {
+      oneSublocation.carId = result.id;
+    })
+
     console.log(context.req.body.carMedia)
     Car.app.models.carMedia.create(context.req.body.carMedia, function (err, data) {
       if (err)
         return next(err);
-      next()
+      Car.app.models.carSublocation.create(context.req.body.carSublocations, function (err, data) {
+        if (err)
+          return next(err);
+        next()
+      })
+
     })
   })
 
@@ -56,12 +67,12 @@ module.exports = function (Car) {
               }, function (err, data) {
                 if (err)
                   return next(err);
-                _.each(context.data.carSublocation, oneSlide => {
+                _.each(context.data.carSublocations, oneSlide => {
                   oneSlide.carId = context.where.id;
                 })
-                console.log("carSublocation")
-                console.log(context.data.carSublocation)
-                Car.app.models.carSublocation.create(context.data.carSublocation, function (err, data) {
+                console.log("carSublocations")
+                console.log(context.data.carSublocations)
+                Car.app.models.carSublocation.create(context.data.carSublocations, function (err, data) {
                   if (err)
                     return next(err);
                   next()
@@ -79,12 +90,12 @@ module.exports = function (Car) {
         }, function (err, data) {
           if (err)
             return next(err);
-          _.each(context.data.carSublocation, oneSlide => {
+          _.each(context.data.carSublocations, oneSlide => {
             oneSlide.carId = context.where.id;
           })
-          console.log("carSublocation")
-          console.log(context.data.carSublocation)
-          Car.app.models.carSublocation.create(context.data.carSublocation, function (err, data) {
+          console.log("carSublocations")
+          console.log(context.data.carSublocations)
+          Car.app.models.carSublocation.create(context.data.carSublocations, function (err, data) {
             if (err)
               return next(err);
             next()
@@ -186,7 +197,9 @@ module.exports = function (Car) {
           }), 1);
         }, this);
         var popCarIds = [];
-
+        if (langFilter == undefined) {
+          return callback(null, cars);
+        }
         cars.forEach(function (oneCar, carIndex) {
           oneCar.driver.get(function (err, driver) {
             driver.driverLangs(function (err, data) {
@@ -247,6 +260,8 @@ module.exports = function (Car) {
       console.log("toAirport");
       object.firstDateOfBooking = toAirportDate;
       object.secondDateOfBooking = addHours(numHoure, toAirportDate)
+      whereObject['where']=[];
+      whereObject['where']["or"]=[];
       whereObject['where']["or"].push({
         "end": {
           "gt": toAirportDate
@@ -346,5 +361,14 @@ module.exports = function (Car) {
       return object;
     }
   }
+
+  function addHours(h, start) {
+    console.log(start.toString())
+    var date = new Date(start.toString());
+    date.setHours(date.getHours() + h);
+    console.log(date)
+    return date
+  }
+
 
 };

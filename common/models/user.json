@@ -91,6 +91,13 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "me"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "getEnd"
     }
   ],
   "methods": {
@@ -226,6 +233,31 @@
       "http": [
         {
           "path": "/me",
+          "verb": "get"
+        }
+      ]
+    },
+    "getEnd": {
+      "accepts": [
+        {
+          "arg": "limit",
+          "type": "number",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/getEnd",
           "verb": "get"
         }
       ]

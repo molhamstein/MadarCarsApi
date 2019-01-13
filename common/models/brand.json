@@ -15,6 +15,10 @@
       "type": "string",
       "required": true
     },
+    "nameTr": {
+      "type": "string",
+      "required": true
+    },
     "createdAt": {
       "type": "date",
       "required": true,

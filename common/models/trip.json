@@ -25,6 +25,9 @@
       },
       {
         "relation": "outerInvoices"
+      },
+      {
+        "relation": "driver"
       }
     ]
   },
@@ -121,6 +124,14 @@
       "type": "hasOne",
       "model": "outerInvoice",
       "foreignKey": "tripId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "driver": {
+      "type": "belongsTo",
+      "model": "driver",
+      "foreignKey": "driverId",
       "options": {
         "nestRemoting": true
       }

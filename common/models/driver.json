@@ -17,6 +17,9 @@
     "include": [
       {
         "relation": "driverLangs"
+      },
+      {
+        "relation": "media"
       }
     ]
   },
@@ -57,6 +60,14 @@
       "type": "hasMany",
       "model": "driverLang",
       "foreignKey": "driverId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "media": {
+      "type": "belongsTo",
+      "model": "media",
+      "foreignKey": "mediaId",
       "options": {
         "nestRemoting": true
       }

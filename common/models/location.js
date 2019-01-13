@@ -11,10 +11,12 @@ module.exports = function (Location) {
     _.each(context.req.body.slideMedia, oneSlide => {
       oneSlide.locationId = result.id;
     })
+
     console.log(context.req.body.slideMedia)
     Location.app.models.locationMedia.create(context.req.body.slideMedia, function (err, data) {
       if (err)
         return next(err);
+      context.req.body.slideMedia = null
       next()
     })
   })
@@ -26,9 +28,11 @@ module.exports = function (Location) {
     if (context.where == null)
       next()
     else {
-      if (context.data.locationMedia != undefined) {
-
+      if (context.data.slideMedia != undefined) {
+        console.log("context.data.slideMedia")
+        console.log(context.data.slideMedia)
         var locationId = context.where.id
+        console.log(locationId)
         Location.app.models.locationMedia.destroyAll({
           "locationId": locationId
         }, function (err, data) {

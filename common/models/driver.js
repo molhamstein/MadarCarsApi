@@ -93,11 +93,15 @@ module.exports = function (Driver) {
   }
 
   Driver.afterRemote('create', function (context, result, next) {
-    _.each(context.req.body.languages, oneLang => {
-      oneLang.driverId = result.id;
+    var listLang = [];
+    _.each(context.req.body.driverLangs, oneLang => {
+      listLang.push({
+        driverId: result.id,
+        landuageId: oneLang
+      })
     })
-    console.log(context.req.body.languages)
-    Driver.app.models.driverLang.create(context.req.body.languages, function (err, data) {
+    console.log(listLang)
+    Driver.app.models.driverLang.create(listLang, function (err, data) {
       if (err)
         return next(err);
       next()
@@ -109,19 +113,21 @@ module.exports = function (Driver) {
     if (context.where == null)
       next()
     else {
-      if (context.data.languages != undefined) {
+      if (context.data.driverLangs != undefined) {
         var driverId = context.where.id
         Driver.app.models.driverLang.destroyAll({
           "driverId": driverId
         }, function (err, data) {
           if (err)
             return next(err);
-          _.each(context.data.languages, oneLang => {
-            oneLang.driverId = driverId;
+          var listLang = [];
+          _.each(context.data.driverLangs, oneLang => {
+            listLang.push({
+              driverId: driverId,
+              landuageId: oneLang
+            })
           })
-          console.log("languages")
-          console.log(context.data.languages)
-          Driver.app.models.driverLang.create(context.data.languages, function (err, data) {
+          Driver.app.models.driverLang.create(listLang, function (err, data) {
             if (err)
               return next(err);
             next()

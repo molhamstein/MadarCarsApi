@@ -6,11 +6,10 @@ const errors = require('../../server/errors');
 module.exports = function (User) {
 
 
-  User.validatesInclusionOf('status', { in: ['active', 'deactive','pending']
+  User.validatesInclusionOf('status', { in: ['active', 'deactive', 'pending']
   });
 
 
-  
   User.login = function (credentials, include, fn) {
     var self = this;
     if (typeof include === 'function') {
@@ -240,7 +239,20 @@ module.exports = function (User) {
     })
   };
 
+  User.beforeRemote('create', function (context, result, next) {
+    User.find({
+      "where": {
+        "phoneNumber": context.req.body.phoneNumber
+      }
+    }, function (err, users) {
+      if (err)
+        return next(err)
+      if (users.length != 0)
+        return next(errors.user.phoneNumberOrUsernameIsUsed());
+      next();
 
+    })
+  })
   /**
    *
    * @param {object} query
@@ -259,7 +271,7 @@ module.exports = function (User) {
   };
 
 
-    User.deactivate = function (id, callback) {
+  User.deactivate = function (id, callback) {
     var code = 200;
     // TODO
     User.findById(id, function (err, user) {
@@ -292,6 +304,40 @@ module.exports = function (User) {
       user.status = "active"
       user.save()
       return callback(err, code)
+
+    })
+  };
+
+  /**
+   *
+   * @param {number} limit
+   * @param {Function(Error, array)} callback
+   */
+
+  User.getEnd = function (limit, callback) {
+    User.count({}, function (err, count) {
+      console.log(count);
+      var skip = 0
+      if (limit < count) {
+        var mod = count % limit;
+        var div = parseInt(count / limit);
+        console.log("mod");
+        console.log(count/limit);
+        if (mod == 0)
+          skip = count - limit
+        else
+          skip = (div * limit);
+      }
+
+      User.find({
+        "skip": skip,
+        "limit": limit
+      }, function (err, data) {
+        callback(null, {
+          "data": data,
+          "count": count
+        })
+      })
 
     })
   };
