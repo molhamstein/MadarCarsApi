@@ -21,12 +21,6 @@
         "relation": "tripSublocations"
       },
       {
-        "relation": "innerInvoices"
-      },
-      {
-        "relation": "outerInvoices"
-      },
-      {
         "relation": "driver"
       }
     ]
