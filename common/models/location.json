@@ -53,6 +53,10 @@
       "type": "string",
       "default": "active"
     },
+    "sublocationCount": {
+      "type": "number",
+      "default": 0
+    },
     "createdAt": {
       "type": "date",
       "required": true,

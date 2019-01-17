@@ -10,20 +10,20 @@ module.exports = function (Predefinedtrips) {
 
 
   Predefinedtrips.afterRemote('create', function (context, result, next) {
-    if (context.req.body.predefinedTripsMedia != undefined) {
-      _.each(context.req.body.predefinedTripsMedia, oneSlide => {
+    if (context.req.body.predefinedTripsMedias != undefined) {
+      _.each(context.req.body.predefinedTripsMedias, oneSlide => {
         oneSlide.predefinedTripId = result.id;
       })
-      console.log(context.req.body.predefinedTripsMedia)
-      Predefinedtrips.app.models.predefinedTripsMedia.create(context.req.body.predefinedTripsMedia, function (err, data) {
+      console.log(context.req.body.predefinedTripsMedias)
+      Predefinedtrips.app.models.predefinedTripsMedia.create(context.req.body.predefinedTripsMedias, function (err, data) {
         if (err)
           return next(err);
-        if (context.req.body.predefinedTripsSubpredefinedtrips != undefined) {
-          _.each(context.req.body.predefinedTripsSubpredefinedtrips, oneSlide => {
+        if (context.req.body.predefinedTripsSublocations != undefined) {
+          _.each(context.req.body.predefinedTripsSublocations, oneSlide => {
             oneSlide.predefinedTripId = result.id;
           })
-          console.log(context.req.body.predefinedTripsSubpredefinedtrips)
-          Predefinedtrips.app.models.predefinedTripsSubpredefinedtrip.create(context.req.body.predefinedTripsSubpredefinedtrips, function (err, data) {
+          console.log(context.req.body.predefinedTripsSublocations)
+          Predefinedtrips.app.models.predefinedTripsSublocation.create(context.req.body.predefinedTripsSublocations, function (err, data) {
             if (err)
               return next(err);
             return next()
@@ -31,12 +31,12 @@ module.exports = function (Predefinedtrips) {
         } else
           return next()
       })
-    } else if (context.req.body.predefinedTripsSubpredefinedtrips != undefined) {
-      _.each(context.req.body.predefinedTripsSubpredefinedtrips, oneSlide => {
+    } else if (context.req.body.predefinedTripsSublocations != undefined) {
+      _.each(context.req.body.predefinedTripsSublocations, oneSlide => {
         oneSlide.predefinedTripId = result.id;
       })
-      console.log(context.req.body.predefinedTripsSubpredefinedtrips)
-      Predefinedtrips.app.models.predefinedTripsSubpredefinedtrip.create(context.req.body.predefinedTripsSubpredefinedtrips, function (err, data) {
+      console.log(context.req.body.predefinedTripsSublocations)
+      Predefinedtrips.app.models.predefinedTripsSublocation.create(context.req.body.predefinedTripsSublocations, function (err, data) {
         if (err)
           return next(err);
         return next()
@@ -55,19 +55,23 @@ module.exports = function (Predefinedtrips) {
     else {
       var predefinedTripId = context.where.id
 
-      if (context.data.predefinedTripsMedia != undefined) {
+      if (context.data.predefinedTripsMedias != undefined) {
         Predefinedtrips.app.models.predefinedTripsMedia.destroyAll({
           "predefinedTripId": predefinedTripId
         }, function (err, data) {
           if (err)
             return next(err);
-          _.each(context.data.predefinedTripsMedia, oneSlide => {
+          console.log("predefinedTripsMedia")
+          console.log(context.data.predefinedTripsMedias)
+          _.each(context.data.predefinedTripsMedias, oneSlide => {
+
             oneSlide.predefinedTripId = context.where.id;
           })
-          console.log(context.data.predefinedTripsMedia)
-          Predefinedtrips.app.models.predefinedTripsMedia.create(context.data.predefinedTripsMedia, function (err, data) {
+          console.log(context.data.predefinedTripsMedias)
+          Predefinedtrips.app.models.predefinedTripsMedia.create(context.data.predefinedTripsMedias, function (err, data) {
             if (err)
               return next(err);
+              console.log("Hiiiiiiiiiiii");
             if (context.data.predefinedTripsSubpredefinedtrips != undefined) {
               Predefinedtrips.app.models.predefinedTripsSubpredefinedtrip.destroyAll({
                 "predefinedTripId": predefinedTripId
@@ -82,11 +86,11 @@ module.exports = function (Predefinedtrips) {
                 Predefinedtrips.app.models.predefinedTripsSubpredefinedtrip.create(context.data.predefinedTripsSubpredefinedtrips, function (err, data) {
                   if (err)
                     return next(err);
-                  next()
+                  return next()
                 })
               })
             } else
-              next()
+              return next()
 
           })
         })
@@ -105,11 +109,11 @@ module.exports = function (Predefinedtrips) {
           Predefinedtrips.app.models.predefinedTripsSubpredefinedtrip.create(context.data.predefinedTripsSubpredefinedtrips, function (err, data) {
             if (err)
               return next(err);
-            next()
+            return next()
           })
         })
       } else
-        next()
+        return next()
     }
 
   })

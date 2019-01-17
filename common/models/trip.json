@@ -72,6 +72,11 @@
       "required": true,
       "default": false
     },
+    "hasOuterBill": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
     "createdAt": {
       "type": "date",
       "required": true,

@@ -28,10 +28,38 @@
       "required": true,
       "defaultFn": "now"
     },
+    "duration": {
+      "type": "number",
+      "required": true
+    },
     "status": {
       "type": "string",
       "required": true,
       "default": "active"
+    },
+    "titleEn": {
+      "type": "string",
+      "required": true
+    },
+    "titleAr": {
+      "type": "string",
+      "required": true
+    },
+    "titleTr": {
+      "type": "string",
+      "required": true
+    },
+    "descriptionEn": {
+      "type": "string",
+      "required": true
+    },
+    "descriptionAr": {
+      "type": "string",
+      "required": true
+    },
+    "descriptionTr": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],

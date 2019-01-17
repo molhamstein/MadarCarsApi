@@ -19,6 +19,48 @@ module.exports = async function (app) {
   }
   */
 
+//  [{
+//   "titleEn": "Fuel",
+//   "titleAr": "Fuel",
+//   "titleTr": "Fuel",
+//   "type": "fuel"
+// },{
+//   "titleEn": "Car Maintenance",
+//   "titleAr": "Car Maintenance",
+//   "titleTr": "Car Maintenance",
+//   "type": "carMaintenance"
+// },{
+//   "titleEn": "Driver Share",
+//   "titleAr": "Driver Share",
+//   "titleTr": "Driver Share",
+//   "type": "driverShare"
+// },{
+//   "titleEn": "Driver Accommodation",
+//   "titleAr": "Driver Accommodation",
+//   "titleTr": "Driver Accommodation",
+//   "type": "driverAccommodation"
+// },{
+//   "titleEn": "Parking",
+//   "titleAr": "Parking",
+//   "titleTr": "Parking",
+//   "type": "parking"
+// },{
+//   "titleEn": "HGS/OGS",
+//   "titleAr": "HGS/OGS",
+//   "titleTr": "HGS/OGS",
+//   "type": "HGS/OGS"
+// },{
+//   "titleEn": "Nearby City",
+//   "titleAr": "Nearby City",
+//   "titleTr": "Nearby City",
+//   "type": "nearbyCity"
+// },{
+//   "titleEn": "City",
+//   "titleAr": "City",
+//   "titleTr": "City",
+//   "type": "city"
+// }]
+
   var date = new Date();
   date = new Date(date.setTime(date.getTime() + 1 * 86400000));
 

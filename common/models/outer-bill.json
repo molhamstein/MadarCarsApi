@@ -1,18 +1,16 @@
 {
-  "name": "innerInvoice",
+  "name": "outerBill",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
-  "scope": {
-    "include": [
-      {
-        "relation": "invoices"
-      }
-    ]
-  },
   "properties": {
+    "status": {
+      "type": "string",
+      "required": true,
+      "default": "notBilled"
+    },
     "createdAt": {
       "type": "date",
       "required": true,
@@ -21,10 +19,10 @@
   },
   "validations": [],
   "relations": {
-    "invoices": {
+    "bills": {
       "type": "hasMany",
-      "model": "invoice",
-      "foreignKey": "innerId",
+      "model": "bill",
+      "foreignKey": "outerBillId",
       "options": {
         "nestRemoting": true
       }
@@ -38,14 +36,6 @@
       }
     }
   },
-  "acls": [
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
-      "property": "add"
-    }
-  ],
+  "acls": [],
   "methods": {}
 }

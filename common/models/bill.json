@@ -1,0 +1,59 @@
+{
+  "name": "bill",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "titleEn": {
+      "type": "string",
+      "required": true
+    },
+    "titleAr": {
+      "type": "string",
+      "required": true
+    },
+    "titleTr": {
+      "type": "string",
+      "required": true
+    },
+    "quantity": {
+      "type": "number",
+      "required": true
+    },
+    "pricePerUnit": {
+      "type": "number",
+      "required": true
+    },
+    "totalPrice": {
+      "type": "number",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "typeBill": {
+      "type": "belongsTo",
+      "model": "typeBill",
+      "foreignKey": "typeBillId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "outerBill": {
+      "type": "belongsTo",
+      "model": "outerBill",
+      "foreignKey": "outerBillId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

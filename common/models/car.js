@@ -60,7 +60,7 @@ module.exports = function (Car) {
           Car.app.models.carMedia.create(context.data.carMedia, function (err, data) {
             if (err)
               return next(err);
-            if (context.data.carSublocation != undefined) {
+            if (context.data.carSublocations != undefined) {
               var carId = context.where.id
               Car.app.models.carSublocation.destroyAll({
                 "carId": carId
@@ -83,7 +83,7 @@ module.exports = function (Car) {
 
           })
         })
-      } else if (context.data.carSublocation != undefined) {
+      } else if (context.data.carSublocations != undefined) {
         var carId = context.where.id
         Car.app.models.carSublocation.destroyAll({
           "carId": carId
@@ -191,9 +191,11 @@ module.exports = function (Car) {
       }, function (err, data) {
         if (err)
           return callback(err)
+        console.log("Data");
+        console.log(data);
         data.forEach(function (element) {
           cars.splice(cars.findIndex(function (i) {
-            return i.id == element.carId;
+            return i.id.toString() == element.carId.toString();
           }), 1);
         }, this);
         var popCarIds = [];
@@ -246,13 +248,18 @@ module.exports = function (Car) {
     if (!fromAirport && !toAirport && inCity) {
       console.log("inCity");
       whereObject[0] = {
-        "end": {
-          "gt": startInCityDate
-        },
-        "start": {
-          "lt": endInCityDate
-        }
-      }
+        "and": [{
+            "end": {
+              "gt": startInCityDate
+            }
+          },
+          {
+            "start": {
+              "lt": endInCityDate
+            }
+          }
+        ]
+      };
       object.where = whereObject;
       object.type = type[1];
       return object;
@@ -260,8 +267,8 @@ module.exports = function (Car) {
       console.log("toAirport");
       object.firstDateOfBooking = toAirportDate;
       object.secondDateOfBooking = addHours(numHoure, toAirportDate)
-      whereObject['where']=[];
-      whereObject['where']["or"]=[];
+      whereObject['where'] = [];
+      whereObject['where']["or"] = [];
       whereObject['where']["or"].push({
         "end": {
           "gt": toAirportDate
@@ -279,12 +286,17 @@ module.exports = function (Car) {
       object.secondDateOfBooking = addHours(numHoure, toAirportDate);
       object.type = type[5];
       whereObject[0] = {
-        "end": {
-          "gt": startInCityDate
-        },
-        "start": {
-          "lt": addHours(numHoure, toAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": startInCityDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, toAirportDate)
+            }
+          }
+        ]
       }
       object.where = whereObject;
 
@@ -295,12 +307,17 @@ module.exports = function (Car) {
       object.secondDateOfBooking = addHours(numHoure, fromAirportDate);
       object.type = type[0];
       whereObject[0] = {
-        "end": {
-          "gt": fromAirportDate
-        },
-        "start": {
-          "lt": addHours(numHoure, fromAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": fromAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, fromAirportDate)
+            }
+          }
+        ]
       }
       object.where = whereObject;
 
@@ -311,12 +328,17 @@ module.exports = function (Car) {
       object.secondDateOfBooking = endInCityDate
       object.type = type[3];
       whereObject[0] = {
-        "end": {
-          "gt": fromAirportDate
-        },
-        "start": {
-          "lt": endInCityDate
-        }
+        "and": [{
+            "end": {
+              "gt": fromAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": endInCityDate
+            }
+          }
+        ]
       }
       object.where = whereObject;
 
@@ -327,20 +349,30 @@ module.exports = function (Car) {
       object.secondDateOfBooking = toAirportDate
       object.type = type[4];
       whereObject[0] = {
-        "end": {
-          "gt": fromAirportDate
-        },
-        "start": {
-          "lt": addHours(numHoure, fromAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": fromAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, fromAirportDate)
+            }
+          }
+        ]
       }
       whereObject[1] = {
-        "end": {
-          "gt": toAirportDate
-        },
-        "start": {
-          "lt": addHours(numHoure, toAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": toAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, toAirportDate)
+            }
+          }
+        ]
       }
       object.where = whereObject;
 
@@ -351,12 +383,17 @@ module.exports = function (Car) {
       object.secondDateOfBooking = addHours(numHoure, toAirportDate);
       object.type = type[6];
       whereObject[0] = {
-        "end": {
-          "gt": fromAirportDate
-        },
-        "start": {
-          "lt": addHours(numHoure, toAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": fromAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, toAirportDate)
+            }
+          }
+        ]
       }
       return object;
     }

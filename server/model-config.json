@@ -119,22 +119,6 @@
     "dataSource": "madarDB",
     "public": true
   },
-  "invoiceType": {
-    "dataSource": "madarDB",
-    "public": true
-  },
-  "invoice": {
-    "dataSource": "madarDB",
-    "public": true
-  },
-  "innerInvoice": {
-    "dataSource": "madarDB",
-    "public": true
-  },
-  "outerInvoice": {
-    "dataSource": "madarDB",
-    "public": true
-  },
   "predefinedTrips": {
     "dataSource": "madarDB",
     "public": true
@@ -156,6 +140,18 @@
     "public": true
   },
   "driverLang": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "typeBill": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "outerBill": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "bill": {
     "dataSource": "madarDB",
     "public": true
   }

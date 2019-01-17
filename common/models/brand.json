@@ -19,6 +19,11 @@
       "type": "string",
       "required": true
     },
+    "isDefult": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
     "createdAt": {
       "type": "date",
       "required": true,

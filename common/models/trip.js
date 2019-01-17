@@ -138,12 +138,17 @@ module.exports = function (Trip) {
     if (!fromAirport && !toAirport && inCity) {
       console.log("inCity");
       whereObject[0] = {
-        "end": {
-          "gt": startInCityDate
-        },
-        "start": {
-          "lt": endInCityDate
-        }
+        "and": [{
+            "end": {
+              "gt": startInCityDate
+            }
+          },
+          {
+            "start": {
+              "lt": endInCityDate
+            }
+          }
+        ]
       }
       object.where = whereObject;
       object.type = type[1];
@@ -152,14 +157,19 @@ module.exports = function (Trip) {
       console.log("toAirport");
       object.firstDateOfBooking = toAirportDate;
       object.secondDateOfBooking = addHours(numHoure, toAirportDate)
-      whereObject['where']["or"].push({
-        "end": {
-          "gt": toAirportDate
-        },
-        "first": {
-          "lt": addHours(numHoure, toAirportDate)
-        },
-      })
+      whereObject[0] = {
+        "and": [{
+            "end": {
+              "gt": toAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, toAirportDate)
+            }
+          }
+        ],
+      }
       object.where = whereObject;
       object.type = type[2];
       return object;
@@ -169,12 +179,17 @@ module.exports = function (Trip) {
       object.secondDateOfBooking = addHours(numHoure, toAirportDate);
       object.type = type[5];
       whereObject[0] = {
-        "end": {
-          "gt": startInCityDate
-        },
-        "start": {
-          "lt": addHours(numHoure, toAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": startInCityDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, toAirportDate)
+            }
+          }
+        ]
       }
       object.where = whereObject;
 
@@ -185,12 +200,17 @@ module.exports = function (Trip) {
       object.secondDateOfBooking = addHours(numHoure, fromAirportDate);
       object.type = type[0];
       whereObject[0] = {
-        "end": {
-          "gt": fromAirportDate
-        },
-        "start": {
-          "lt": addHours(numHoure, fromAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": fromAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, fromAirportDate)
+            }
+          }
+        ]
       }
       object.where = whereObject;
 
@@ -201,12 +221,17 @@ module.exports = function (Trip) {
       object.secondDateOfBooking = endInCityDate
       object.type = type[3];
       whereObject[0] = {
-        "end": {
-          "gt": fromAirportDate
-        },
-        "start": {
-          "lt": endInCityDate
-        }
+        "and": [{
+            "end": {
+              "gt": fromAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": endInCityDate
+            }
+          }
+        ]
       }
       object.where = whereObject;
 
@@ -217,20 +242,30 @@ module.exports = function (Trip) {
       object.secondDateOfBooking = toAirportDate
       object.type = type[4];
       whereObject[0] = {
-        "end": {
-          "gt": fromAirportDate
-        },
-        "start": {
-          "lt": addHours(numHoure, fromAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": fromAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, fromAirportDate)
+            }
+          }
+        ]
       }
       whereObject[1] = {
-        "end": {
-          "gt": toAirportDate
-        },
-        "start": {
-          "lt": addHours(numHoure, toAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": toAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, toAirportDate)
+            }
+          }
+        ]
       }
       object.where = whereObject;
 
@@ -241,12 +276,17 @@ module.exports = function (Trip) {
       object.secondDateOfBooking = addHours(numHoure, toAirportDate);
       object.type = type[6];
       whereObject[0] = {
-        "end": {
-          "gt": fromAirportDate
-        },
-        "start": {
-          "lt": addHours(numHoure, toAirportDate)
-        }
+        "and": [{
+            "end": {
+              "gt": fromAirportDate
+            }
+          },
+          {
+            "start": {
+              "lt": addHours(numHoure, toAirportDate)
+            }
+          }
+        ]
       }
       return object;
     }
@@ -258,9 +298,17 @@ module.exports = function (Trip) {
         return callback(err)
       if (oneCar == null || oneCar.status == "deactive")
         return callback(errors.car.carNotFound());
+      console.log("where");
+      console.log(JSON.stringify(where));
       Trip.app.models.bookingCar.find({
         "where": {
-          "or": where
+          "and": [{
+              "carId": carId
+            },
+            {
+              "or": where
+            }
+          ]
         }
       }, function (err, data) {
         if (err)
