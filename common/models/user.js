@@ -145,8 +145,6 @@ module.exports = function (User) {
           where: {
             or: [{
               phoneNumber: phoneNumber
-            }, {
-              username: username
             }]
           }
         }, function (err, userByPhoneNumber) {
