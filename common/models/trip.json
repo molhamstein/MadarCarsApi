@@ -117,22 +117,6 @@
         "nestRemoting": true
       }
     },
-    "innerInvoices": {
-      "type": "hasOne",
-      "model": "innerInvoice",
-      "foreignKey": "tripId",
-      "options": {
-        "nestRemoting": true
-      }
-    },
-    "outerInvoices": {
-      "type": "hasOne",
-      "model": "outerInvoice",
-      "foreignKey": "tripId",
-      "options": {
-        "nestRemoting": true
-      }
-    },
     "driver": {
       "type": "belongsTo",
       "model": "driver",
