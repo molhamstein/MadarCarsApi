@@ -126,7 +126,7 @@ module.exports = function (User) {
   var snLogin = function (data, type, callback) {
     var socialId = data.socialId;
     var token = data.token;
-    var username = data.username;
+    var name = data.name;
     var phoneNumber = data.phoneNumber;
     var ISOCode = data.ISOCode;
     User.findOne({
@@ -154,7 +154,7 @@ module.exports = function (User) {
           User.create({
             socialId: socialId,
             status: "active",
-            username: username,
+            name: name,
             phoneNumber: phoneNumber,
             ISOCode: ISOCode,
             password: "123",
