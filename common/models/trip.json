@@ -39,6 +39,18 @@
       "required": true,
       "default": 0
     },
+    "pricePerDay": {
+      "type": "number",
+      "required": true
+    },
+    "priceOneWay": {
+      "type": "number",
+      "required": true
+    },
+    "priceTowWay": {
+      "type": "number",
+      "required": true
+    },
     "fromAirportDate": {
       "type": "date"
     },

@@ -124,6 +124,12 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "activate"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
     }
   ],
   "methods": {}

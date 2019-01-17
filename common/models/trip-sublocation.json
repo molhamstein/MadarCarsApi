@@ -16,6 +16,10 @@
     "duration": {
       "type": "number",
       "required": true
+    },
+    "cost": {
+      "type": "number",
+      "required": true
     }
   },
   "validations": [],
