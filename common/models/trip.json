@@ -57,7 +57,8 @@
       "default": 0
     },
     "fromAirportDate": {
-      "type": "date"
+      "type": "date",
+      "defaultFn": "now"
     },
     "fromAirport": {
       "type": "boolean",
@@ -65,7 +66,8 @@
       "default": false
     },
     "toAirportDate": {
-      "type": "date"
+      "type": "date",
+      "defaultFn": "now"
     },
     "toAirport": {
       "type": "boolean",
@@ -73,10 +75,12 @@
       "default": false
     },
     "startInCityDate": {
-      "type": "date"
+      "type": "date",
+      "defaultFn": "now"
     },
     "endInCityDate": {
-      "type": "date"
+      "type": "date",
+      "defaultFn": "now"
     },
     "inCity": {
       "type": "boolean",

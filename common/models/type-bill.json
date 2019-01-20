@@ -16,7 +16,7 @@
     },
     "titleTr": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "type": {
       "type": "string",
