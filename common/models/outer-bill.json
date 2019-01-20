@@ -6,7 +6,6 @@
     "validateUpsert": true
   },
   "replaceOnPUT": false,
-
   "scope": {
     "include": [
       {
@@ -75,6 +74,20 @@
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "getouterBill"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "getouterBill"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "getouterBill"
     }
