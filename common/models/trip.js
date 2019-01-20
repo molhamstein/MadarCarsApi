@@ -43,11 +43,15 @@ module.exports = function (Trip) {
         oneSublocation.tripId = result.id;
       })
       console.log(ctx.req.body.tripSublocations)
-      Trip.app.models.tripSublocation.create(ctx.req.body.tripSublocations, function (err, data) {
-        if (err)
-          return next(err);
-        next();
-      })
+      if (ctx.req.body.tripSublocations)
+        Trip.app.models.tripSublocation.create(ctx.req.body.tripSublocations, function (err, data) {
+          if (err)
+            return next(err);
+          next();
+        })
+      else {
+        next()
+      }
 
     })
   })

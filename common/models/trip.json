@@ -51,6 +51,11 @@
       "type": "number",
       "required": true
     },
+    "daysInCity": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
     "fromAirportDate": {
       "type": "date"
     },

@@ -267,16 +267,19 @@ module.exports = function (Car) {
       console.log("toAirport");
       object.firstDateOfBooking = toAirportDate;
       object.secondDateOfBooking = addHours(numHoure, toAirportDate)
-      whereObject['where'] = [];
-      whereObject['where']["or"] = [];
-      whereObject['where']["or"].push({
-        "end": {
-          "gt": toAirportDate
-        },
-        "first": {
-          "lt": addHours(numHoure, toAirportDate)
-        },
-      })
+      whereObject[0] = {
+        "and": [{
+            "end": {
+              "gt": toAirportDate
+            }
+          },
+          {
+            "first": {
+              "lt": addHours(numHoure, toAirportDate)
+            },
+          }
+        ]
+      }
       object.where = whereObject;
       object.type = type[2];
       return object;

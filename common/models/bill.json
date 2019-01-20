@@ -5,6 +5,7 @@
   "options": {
     "validateUpsert": true
   },
+  "replaceOnPUT": false,
   "properties": {
     "titleEn": {
       "type": "string",

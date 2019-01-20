@@ -59,6 +59,11 @@ module.exports = async function (app) {
 //   "titleAr": "City",
 //   "titleTr": "City",
 //   "type": "city"
+// },{
+//   "titleEn": "Airport",
+//   "titleAr": "Airport",
+//   "titleTr": "Airport",
+//   "type": "airport"
 // }]
 
   var date = new Date();
