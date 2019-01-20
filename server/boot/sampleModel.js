@@ -332,7 +332,7 @@ module.exports = async function (app) {
           password: 'password',
           status: "active",
           phoneNumber: "0957465877",
-          username: "customer1",
+          name: "customer1",
           ISOCode: "BF"
         }
 
