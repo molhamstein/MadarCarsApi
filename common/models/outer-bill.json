@@ -6,9 +6,9 @@
     "validateUpsert": true
   },
   "replaceOnPUT": false,
+
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "bills"
       },
       {
@@ -55,33 +55,11 @@
       }
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "DENY",
-      "property": "getouterBill"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
-      "property": "getouterBill"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
-      "property": "getouterBill"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
       "property": "getouterBill"
     },
     {
@@ -94,32 +72,26 @@
   ],
   "methods": {
     "getouterBill": {
-      "accepts": [
-        {
-          "arg": "tripId",
-          "type": "string",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "path"
-          }
+      "accepts": [{
+        "arg": "tripId",
+        "type": "string",
+        "required": true,
+        "description": "",
+        "http": {
+          "source": "path"
         }
-      ],
-      "returns": [
-        {
-          "arg": "result",
-          "type": "object",
-          "root": true,
-          "description": ""
-        }
-      ],
+      }],
+      "returns": [{
+        "arg": "result",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
       "description": "",
-      "http": [
-        {
-          "path": "/getouterBill/:tripId",
-          "verb": "get"
-        }
-      ]
+      "http": [{
+        "path": "/getouterBill/:tripId",
+        "verb": "get"
+      }]
     }
   }
 }
