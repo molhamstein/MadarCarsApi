@@ -17,7 +17,7 @@
     },
     "nameTr": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "isDefult": {
       "type": "boolean",
