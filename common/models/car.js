@@ -6,15 +6,15 @@ var _ = require('lodash');
 const type = ['fromAirport', 'city', 'toAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'cityAndToAirport', 'fromAirportAndCityAndToAirport']
 
 module.exports = function (Car) {
-  Car.validatesInclusionOf('type', { in: ['sport', 'ceremony']
-  });
+  // Car.validatesInclusionOf('type', { in: ['sport', 'ceremony']
+  // });
 
   Car.validatesInclusionOf('status', { in: ['active', 'deactive']
   });
 
 
-  Car.validatesInclusionOf('engineType', { in: ['manual', 'automatic']
-  });
+  // Car.validatesInclusionOf('engineType', { in: ['manual', 'automatic']
+  // });
 
 
   Car.afterRemote('create', function (context, result, next) {
