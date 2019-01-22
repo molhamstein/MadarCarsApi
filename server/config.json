@@ -1,8 +1,8 @@
 {
   "restApiRoot": "/api",
   "host": "0.0.0.0",
-  "domain": "http://104.248.192.42:3000",
-  "siteDomain": "http://104.248.192.42:3000",
+  "domain": "https://104.248.192.42:3000",
+  "siteDomain": "https://104.248.192.42:3000",
   "thumbUrl": "C:/FFmpeg/bin/",
   "port": 3000,
   "remoting": {
