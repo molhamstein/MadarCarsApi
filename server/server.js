@@ -4,6 +4,7 @@ var loopback = require('loopback');
 var boot = require('loopback-boot');
 
 var app = module.exports = loopback();
+var loopbackSSL = require('loopback-ssl');
 
 app.start = function() {
   // start the web server
@@ -26,4 +27,5 @@ boot(app, __dirname, function(err) {
   // start the server if `$ node server.js`
   if (require.main === module)
     app.start();
+    loopbackSSL.startServer(app);
 });
