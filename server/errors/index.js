@@ -21,6 +21,9 @@ module.exports.user = {
   notCompleatedSNLogin: function () {
     return new cError(450, 'not compleated sn login', 450);
   },
+  userNotFound: function () {
+    return new cError(459, 'user not found', 459);
+  },
   phoneNumberOrUsernameIsUsed: function () {
     return new cError(451, 'phonenumber or username is used', 451);
   }

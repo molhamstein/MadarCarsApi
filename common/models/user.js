@@ -320,7 +320,7 @@ module.exports = function (User) {
         var mod = count % limit;
         var div = parseInt(count / limit);
         console.log("mod");
-        console.log(count/limit);
+        console.log(count / limit);
         if (mod == 0)
           skip = count - limit
         else
@@ -337,6 +337,30 @@ module.exports = function (User) {
         })
       })
 
+    })
+  };
+
+  /**
+   *
+   * @param {object} data
+   * @param {Function(Error, number)} callback
+   */
+
+  User.resetPassword = function (userId, newPassword, callback) {
+    var code = 200;
+    User.findById(userId, function (err, userData) {
+      if (err)
+        return callback(err, null)
+      if (userData == null)
+        return callback(errors.user.userNotFound());
+        userData.updateAttributes({
+        'password': User.hashPassword(newPassword),
+      }, function (err) {
+        if (err) {
+          return callback(err, null)
+        }
+        return callback(null, code)
+      })
     })
   };
 

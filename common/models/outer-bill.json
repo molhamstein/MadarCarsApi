@@ -6,9 +6,9 @@
     "validateUpsert": true
   },
   "replaceOnPUT": false,
-
   "scope": {
-    "include": [{
+    "include": [
+      {
         "relation": "bills"
       },
       {
@@ -55,7 +55,8 @@
       }
     }
   },
-  "acls": [{
+  "acls": [
+    {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -72,26 +73,32 @@
   ],
   "methods": {
     "getouterBill": {
-      "accepts": [{
-        "arg": "tripId",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
+      "accepts": [
+        {
+          "arg": "tripId",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/getouterBill/:tripId",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/getouterBill/:tripId",
+          "verb": "get"
+        }
+      ]
     }
   }
 }
