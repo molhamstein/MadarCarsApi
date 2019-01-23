@@ -10,8 +10,28 @@ module.exports = function (Admin) {
   });
 
 
+  Admin.afterRemote('create', function (ctx, result, next) {
+    Admin.app.models.Role.find({
+      "where": {
+        "name": "admin"
+      }
+    }, function (err, roles) {
+      if (err)
+        return next(err)
+      Admin.app.models.RoleMapping.create({
+        "principalType": "USER",
+        "roleId": roles[0].id,
+        "principalId": result.id
+      }, function (err, data) {
+        if (err)
+          return next(err)
+        next()
+      })
+    })
+  })
+
   Admin.on('resetPasswordRequest', function (info) {
-    let url = config.domain+`resetPassword?access_token=${info.accessToken.id}&user_id=${info.user.id}`;
+    let url = config.domain + `resetPassword?access_token=${info.accessToken.id}&user_id=${info.user.id}`;
 
     ejs.renderFile(path.resolve(__dirname + "../../../server/views/reset-password-template.ejs"), {
       url: url
@@ -27,6 +47,24 @@ module.exports = function (Admin) {
       });
     });
   });
+
+  Admin.resetPassword = function (userId, newPassword, callback) {
+    var code = 200;
+    Admin.findById(userId, function (err, userData) {
+      if (err)
+        return callback(err, null)
+      if (userData == null)
+        return callback(errors.user.userNotFound());
+        userData.updateAttributes({
+        'password': Admin.hashPassword(newPassword),
+      }, function (err) {
+        if (err) {
+          return callback(err, null)
+        }
+        return callback(null, code)
+      })
+    })
+  };
 
 
 };

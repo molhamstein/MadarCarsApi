@@ -34,14 +34,14 @@
   },
   "RoleMapping": {
     "dataSource": "madarDB",
-    "public": false,
+    "public": true,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
     "dataSource": "madarDB",
-    "public": false
+    "public": true
   },
   "country": {
     "dataSource": "madarDB",
