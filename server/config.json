@@ -1,8 +1,8 @@
 {
   "restApiRoot": "/api",
   "host": "0.0.0.0",
-  "domain": "https://104.248.192.42:3000",
-  "siteDomain": "https://104.248.192.42:3000",
+  "domain": "https://jawlatcom.com:3000",
+  "siteDomain": "https://jawlatcom.com:3000",
   "thumbUrl": "C:/FFmpeg/bin/",
   "port": 3000,
   "remoting": {
