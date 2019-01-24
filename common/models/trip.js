@@ -292,6 +292,7 @@ module.exports = function (Trip) {
           }
         ]
       }
+      object.where = whereObject;
       return object;
     }
   }

@@ -160,7 +160,7 @@ module.exports = function (Car) {
    * @param {Function(Error, array)} callback
    */
 
-  Car.getAvailable = function (flags, dates, locationId, filter, langFilter, callback) {
+  Car.getAvailable = function (flags, dates, locationId, filter, langFilter, tripId, callback) {
 
     if (filter == null) {
       var filter = {}
@@ -173,24 +173,51 @@ module.exports = function (Car) {
       if (err)
         return callback(err, null)
       var object = fillDateOfBooking(flags, dates)
-      // console.log(object.where)
+      console.log("object.where")
+      console.log(JSON.stringify(object.where))
       var carIDS = []
       _.each(cars, oneCar => {
         carIDS.push(oneCar.id);
       })
-      Car.app.models.bookingCar.find({
-        "where": {
-          "and": [{
-            "carId": {
-              "inq": carIDS
-            }
-          }, {
-            "or": object.where
-          }]
+      console.log(tripId);
+      var mainWher = {}
+      if (tripId != undefined)
+        mainWher = {
+          "where": {
+            "and": [{
+                "carId": {
+                  "inq": carIDS
+                },
+              },
+              {
+                "tripId": {
+                  "neq": tripId
+                }
+              }, {
+                "or": object.where
+              }
+            ]
+          }
         }
-      }, function (err, data) {
+      else {
+        mainWher = {
+          "where": {
+            "and": [{
+              "carId": {
+                "inq": carIDS
+              },
+            }, {
+              "or": object.where
+            }]
+          }
+        }
+      }
+      Car.app.models.bookingCar.find(mainWher, function (err, data) {
         if (err)
           return callback(err)
+
+        // console.log("object.where");
+        // console.log(object.where);
         console.log("Data");
         console.log(data);
         data.forEach(function (element) {
@@ -398,6 +425,7 @@ module.exports = function (Car) {
           }
         ]
       }
+      object.where = whereObject;
       return object;
     }
   }

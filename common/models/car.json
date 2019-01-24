@@ -212,6 +212,12 @@
           "type": "array",
           "required": false,
           "description": ""
+        },
+        {
+          "arg": "tripId",
+          "type": "true",
+          "required": false,
+          "description": ""
         }
       ],
       "returns": [
