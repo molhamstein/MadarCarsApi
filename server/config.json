@@ -1,7 +1,7 @@
 {
   "restApiRoot": "/api",
   "host": "0.0.0.0",
-  "domain": "https://jawlatcom.com:3000",
+  "domain": "https://jawlatcom.com",
   "siteDomain": "https://jawlatcom.com:3000",
   "thumbUrl": "C:/FFmpeg/bin/",
   "port": 3000,
@@ -31,5 +31,4 @@
     "requestCert": false,
     "rejectUnauthorized": false
   }
-
 }

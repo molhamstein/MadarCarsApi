@@ -19,11 +19,15 @@
     "isSuperAdmin": {
       "type": "boolean",
       "default": false
+    },
+    "fireBaseToken": {
+      "type": "string"
     }
   },
   "validations": [],
   "relations": {},
-  "acls": [{
+  "acls": [
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "admin",
@@ -35,34 +39,14 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "resetPassword"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "setFirebaseToken"
     }
   ],
-  "methods": {
-    "resetPassword": {
-      "accepts": [{
-          "arg": "userId",
-          "type": "string",
-          "required": true,
-          "description": ""
-        },
-        {
-          "arg": "newPassword",
-          "type": "string",
-          "required": true,
-          "description": ""
-        }
-      ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/resetPassword",
-        "verb": "put"
-      }]
-    }
-  }
+  "methods": {}
 }

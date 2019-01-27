@@ -23,7 +23,7 @@ module.exports = function (Trip) {
     cheackLocation(data.locationId, function (err) {
       if (err)
         return next(err)
-      cheackCar(data.carId, data.type, bookingDate.where, function (err) {
+      cheackCar(data.carId, data.type, bookingDate.where, null, function (err) {
         if (err)
           return next(err)
         console.log("Done");
@@ -38,7 +38,6 @@ module.exports = function (Trip) {
     Trip.app.models.bookingCar.create(bookingData, function (err, data) {
       if (err)
         return next(err);
-      result.tripSublocations
       _.each(ctx.req.body.tripSublocations, oneSublocation => {
         oneSublocation.tripId = result.id;
       })
@@ -297,7 +296,7 @@ module.exports = function (Trip) {
     }
   }
 
-  function cheackCar(carId, type, where, callback) {
+  function cheackCar(carId, type, where, tripId, callback) {
     Trip.app.models.car.findById(carId, function (err, oneCar) {
       if (err)
         return callback(err)
@@ -305,17 +304,38 @@ module.exports = function (Trip) {
         return callback(errors.car.carNotFound());
       console.log("where");
       console.log(JSON.stringify(where));
-      Trip.app.models.bookingCar.find({
-        "where": {
-          "and": [{
-              "carId": carId
-            },
-            {
-              "or": where
-            }
-          ]
+      var mainWher = {}
+      if (tripId != null)
+        mainWher = {
+          "where": {
+            "and": [{
+                "carId": carId
+              },
+              {
+                "tripId": {
+                  "neq": tripId
+                }
+              },
+              {
+                "or": where
+              }
+            ]
+          }
         }
-      }, function (err, data) {
+      else {
+        mainWher = {
+          "where": {
+            "and": [{
+                "carId": carId
+              },
+              {
+                "or": where
+              }
+            ]
+          }
+        }
+      }
+      Trip.app.models.bookingCar.find(mainWher, function (err, data) {
         if (err)
           return callback(err)
         if (data[0] != null)
@@ -419,5 +439,116 @@ module.exports = function (Trip) {
         callback(null, trip[0]);
       })
   };
+
+  /**
+   *
+   * @param {object} data
+   * @param {string} id
+   * @param {Function(Error, object)} callback
+   */
+
+  Trip.editMethod = function (data, id, context, callback) {
+    var data;
+    Trip.findById(id, function (err, TripData) {
+      if (err)
+        return callback(err)
+
+      if (data.ownerId == null)
+        data.ownerId = context.req.accessToken.userId;
+
+      var bookingDate = fillDateOfBooking(data)
+      data.type = bookingDate.type;
+      // userData.updateAttributes({
+
+      cheackLocation(data.locationId, function (err) {
+        if (err)
+          return callback(err)
+        cheackCar(data.carId, data.type, bookingDate.where, id, function (err) {
+          if (err)
+            return callback(err)
+          deleteCarBooking(id, function (err) {
+            if (err)
+              return callback(err)
+
+            deleteTripSubLocation(id, function (err) {
+              if (err)
+                return callback(err)
+              console.log("Done")
+              var newData = preperData(data);
+              TripData.updateAttributes(newData, function (err, newTripData) {
+                if (err)
+                  return callback(err)
+                var bookingData = prepareCarBooking(newTripData);
+                Trip.app.models.bookingCar.create(bookingData, function (err, data) {
+                  if (err)
+                    return callback(err);
+                    
+                  _.each(data.tripSublocations, oneSublocation => {
+                    oneSublocation.tripId = newTripData.id;
+                  })
+                  console.log(data.tripSublocations)
+                  if (data.tripSublocations)
+                    Trip.app.models.tripSublocation.create(data.tripSublocations, function (err, data) {
+                      if (err)
+                        return callback(err);
+                        callback(null,newTripData);
+                    })
+                  else {
+                    callback(null,newTripData)
+                  }
+
+                })
+              })
+            })
+
+          })
+        })
+      })
+    })
+  };
+
+  function preperData(data) {
+    var Data = {};
+    Data['locationId'] = data['locationId'];
+    Data['ownerId'] = data['ownerId'];
+    Data['fromAirport'] = data['fromAirport'];
+    Data['toAirport'] = data['toAirport'];
+    Data['inCity'] = data['inCity'];
+    Data['toAirportDate'] = data['toAirportDate'];
+    Data['startInCityDate'] = data['startInCityDate'];
+    Data['endInCityDate'] = data['endInCityDate'];
+    Data['fromAirportDate'] = data['fromAirportDate'];
+    Data['driverId'] = data['driverId'];
+    Data['pricePerDay'] = data['pricePerDay'];
+    Data['priceOneWay'] = data['priceOneWay'];
+    Data['priceTowWay'] = data['priceTowWay'];
+    Data['carId'] = data['carId'];
+    Data['cost'] = data['cost'];
+    Data['daysInCity'] = data['daysInCity'];
+    Data['type'] = data['type'];
+    return Data;
+  }
+
+  function  deleteCarBooking(tripId, callback) {
+    Trip.app.models.bookingCar.destroyAll({
+      "tripId": tripId
+    }, function (err, data) {
+      if (err)
+        return callback(err)
+      callback(null)
+    })
+  }
+
+  function deleteTripSubLocation(tripId, callback) {
+    Trip.app.models.tripSublocation.destroyAll({
+      "tripId": tripId
+    }, function (err, data) {
+      if (err)
+        return callback(err)
+      callback(null)
+    })
+  }
+
+
 
 };

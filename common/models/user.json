@@ -54,6 +54,9 @@
       "required": true,
       "defaultFn": "now"
     },
+    "fireBaseToken": {
+      "type": "string"
+    },
     "typeLogIn": {
       "type": "string",
       "default": "registration"
@@ -106,6 +109,13 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "setFirebaseToken"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "getEnd"
@@ -119,6 +129,69 @@
     }
   ],
   "methods": {
+    "setFirebaseToken": {
+      "accepts": [
+        {
+          "arg": "token",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "req",
+          "type": "object",
+          "http": {
+            "source": "req"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/setFirebaseToken",
+          "verb": "put"
+        }
+      ]
+    },
+    "resetPassword": {
+      "accepts": [
+        {
+          "arg": "userId",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "newPassword",
+          "type": "string",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/resetPassword",
+          "verb": "put"
+        }
+      ]
+    },
     "deactivate": {
       "accepts": [
         {
@@ -277,37 +350,6 @@
         {
           "path": "/getEnd",
           "verb": "get"
-        }
-      ]
-    },
-    "resetPassword": {
-      "accepts": [
-        {
-          "arg": "userId",
-          "type": "string",
-          "required": true,
-          "description": ""
-        },
-        {
-          "arg": "newPassword",
-          "type": "string",
-          "required": true,
-          "description": ""
-        }
-      ],
-      "returns": [
-        {
-          "arg": "code",
-          "type": "number",
-          "root": true,
-          "description": ""
-        }
-      ],
-      "description": "",
-      "http": [
-        {
-          "path": "/resetPassword",
-          "verb": "put"
         }
       ]
     }

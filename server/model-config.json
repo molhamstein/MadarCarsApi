@@ -154,5 +154,13 @@
   "bill": {
     "dataSource": "madarDB",
     "public": true
+  },
+  "userNotification": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "adminNotification": {
+    "dataSource": "madarDB",
+    "public": true
   }
 }

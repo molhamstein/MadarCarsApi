@@ -353,7 +353,7 @@ module.exports = function (User) {
         return callback(err, null)
       if (userData == null)
         return callback(errors.user.userNotFound());
-        userData.updateAttributes({
+      userData.updateAttributes({
         'password': User.hashPassword(newPassword),
       }, function (err) {
         if (err) {
@@ -361,6 +361,21 @@ module.exports = function (User) {
         }
         return callback(null, code)
       })
+    })
+  };
+
+
+  User.setFirebaseToken = function (token, req, callback) {
+    var code = 200;
+
+    console.log("req.accessToken.userId");
+    console.log(req.accessToken.userId);
+    console.log("token")
+    console.log(token)
+    User.findById(req.accessToken.userId, function (err, user) {
+      user.fireBaseToken = token;
+      user.save()
+      callback(null, code);
     })
   };
 

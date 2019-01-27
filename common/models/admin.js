@@ -65,6 +65,21 @@ module.exports = function (Admin) {
       })
     })
   };
+  
+  Admin.setFirebaseToken = function (token, req, callback) {
+    var code = 200;
+
+    console.log("req.accessToken.userId");
+    console.log(req.accessToken.userId);
+    console.log("token")
+    console.log(token)
+    Admin.findById(req.accessToken.userId, function (err, user) {
+      user.fireBaseToken = token;
+      user.save()
+      callback(null, code);
+    })
+    // TODO
+  };
 
 
 };
