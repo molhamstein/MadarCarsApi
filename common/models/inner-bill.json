@@ -1,0 +1,104 @@
+{
+  "name": "innerBill",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "replaceOnPUT": false,
+  "scope": {
+    "include": [
+      {
+        "relation": "bills"
+      },
+      {
+        "relation": "trip"
+      }
+    ]
+  },
+  "properties": {
+    "status": {
+      "type": "string",
+      "required": true,
+      "default": "notBilled"
+    },
+    "createdAt": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "bills": {
+      "type": "hasMany",
+      "model": "bill",
+      "foreignKey": "innerBillId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "trip": {
+      "type": "belongsTo",
+      "model": "trip",
+      "foreignKey": "tripId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "user": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "ownerId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY",
+      "property": "getinnerBill"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "getinnerBill"
+    }
+  ],
+  "methods": {
+    "getinnerBill": {
+      "accepts": [
+        {
+          "arg": "tripId",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/getinnerBill/:tripId",
+          "verb": "get"
+        }
+      ]
+    }
+  }
+}

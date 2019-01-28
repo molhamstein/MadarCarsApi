@@ -2,6 +2,7 @@
   "restApiRoot": "/api",
   "host": "0.0.0.0",
   "domain": "https://jawlatcom.com",
+  "serverKey": "AAAA1fioJ8c:APA91bEoNNGkqTPXgfjOWLt7ooPjRqIptBPzw2Skss3kCkfLXgdwllrkZ2sTWXtsY8NznlH8uZsF2JkCzVO5Pr7YH_NOJQy8RboV_QwLTTfG-8jsn0xGrgQYi6IQUB5S5B1nQJkowQ8P",
   "siteDomain": "https://jawlatcom.com:3000",
   "thumbUrl": "C:/FFmpeg/bin/",
   "port": 3000,

@@ -92,6 +92,11 @@
       "required": true,
       "default": false
     },
+    "hasInnerBill": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
     "createdAt": {
       "type": "date",
       "required": true,

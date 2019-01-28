@@ -53,6 +53,14 @@
       "options": {
         "nestRemoting": true
       }
+    },
+    "innerBill": {
+      "type": "belongsTo",
+      "model": "innerBill",
+      "foreignKey": "innerBillId",
+      "options": {
+        "nestRemoting": true
+      }
     }
   },
   "acls": [],

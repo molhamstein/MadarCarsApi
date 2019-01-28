@@ -2,6 +2,10 @@
 var g = require('strong-globalize')();
 var debug = require('debug')('loopback:user');
 const errors = require('../../server/errors');
+const accountSid = 'AC6df6d08ede1a1f034d74c7ab40f53f96';
+const authToken = '12d6af0846ccee6eb0869aae00527289';
+var twilio = require('twilio');
+var client = new twilio(accountSid, authToken);
 
 module.exports = function (User) {
 
@@ -247,10 +251,86 @@ module.exports = function (User) {
         return next(err)
       if (users.length != 0)
         return next(errors.user.phoneNumberOrUsernameIsUsed());
-      next();
 
+      if (context.req.body.mediaId == undefined) {
+        User.app.models.Media.create({
+          "thumb": context.req.body.url,
+          "url": context.req.body.url
+        }, function (err, media) {
+          if (err)
+            return next(err)
+          context.req.body.mediaId = media.id;
+          // sendSMS(context.req.body.phoneNumber, function () {})
+          next();
+
+        })
+      } else {
+        // sendSMS(context.req.body.phoneNumber, function () {})
+        next();
+
+      }
     })
   })
+
+  User.afterRemote('create', function (ctx, result, next) {
+    // sendSMS(ctx.req.body.phoneNumber, function () {})
+    next()
+  })
+
+
+  /**
+   *
+   * @param {string} from
+   * @param {string} to
+   * @param {Function(Error)} callback
+   */
+
+  User.sendMsg = function (from, to, callback) {
+    sendSMS(from, to, function () {})
+    callback(null);
+  };
+
+  function sendSMS(from, to, callback) {
+    client.messages.create({
+        body: 'Hello from Node',
+        to: to, // Text this number
+        from: from // from: '+963 957 465 876' // From a valid Twilio number
+      })
+      .then((message) => console.log(message.sid))
+      .catch(function (reason) {
+        // rejection
+        console.log(reason)
+      });
+    // callback();
+  }
+
+
+  /**
+   *
+   * @param {string} deviceId
+   * @param {Function(Error, number)} callback
+   */
+
+  User.logOut = function (deviceId, context, callback) {
+    var code = 200;
+    var userId = context.req.accessToken.userId
+    User.findById(userId, function (err, user) {
+      if (err)
+        return callback(err, null);
+      User.app.models.Firbasetoken.delete({
+        "deviceId": deviceId,
+        "userId": userId
+      }, function (err, data) {
+        if (err)
+          return callback(err, null);
+        user.logOut();
+        callback(null, code);
+      })
+      // return callback(null, user)
+    })
+
+    // TODO
+  };
   /**
    *
    * @param {object} query

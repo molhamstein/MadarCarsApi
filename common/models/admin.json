@@ -39,13 +39,6 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "resetPassword"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$authenticated",
-      "permission": "ALLOW",
-      "property": "setFirebaseToken"
     }
   ],
   "methods": {}

@@ -162,5 +162,13 @@
   "adminNotification": {
     "dataSource": "madarDB",
     "public": true
+  },
+  "firbaseToken": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "innerBill": {
+    "dataSource": "madarDB",
+    "public": true
   }
 }

@@ -408,7 +408,15 @@ module.exports = function (Trip) {
           return callback(errors.trip.tripNotFound());
         trip[0].status = newStatus;
         trip[0].save();
-        callback(null, trip[0]);
+        if (newStatus != 'finished') {
+          callback(null, trip[0]);
+        } else {
+          Trip.app.models.Usernotification.sendRateNotification(trip[0].ownerId, trip[0].id, trip[0].owner.firbaseToken, function (err) {
+            if (err)
+              console.log(err)
+            callback(null, trip[0]);
+          })
+        }
       })
   };
 
@@ -482,7 +490,7 @@ module.exports = function (Trip) {
                 Trip.app.models.bookingCar.create(bookingData, function (err, data) {
                   if (err)
                     return callback(err);
-                    
+
                   _.each(data.tripSublocations, oneSublocation => {
                     oneSublocation.tripId = newTripData.id;
                   })
@@ -491,10 +499,10 @@ module.exports = function (Trip) {
                     Trip.app.models.tripSublocation.create(data.tripSublocations, function (err, data) {
                       if (err)
                         return callback(err);
-                        callback(null,newTripData);
+                      callback(null, newTripData);
                     })
                   else {
-                    callback(null,newTripData)
+                    callback(null, newTripData)
                   }
 
                 })
@@ -529,7 +537,7 @@ module.exports = function (Trip) {
     return Data;
   }
 
-  function  deleteCarBooking(tripId, callback) {
+  function deleteCarBooking(tripId, callback) {
     Trip.app.models.bookingCar.destroyAll({
       "tripId": tripId
     }, function (err, data) {

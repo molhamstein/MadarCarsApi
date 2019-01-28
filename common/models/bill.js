@@ -41,8 +41,43 @@ module.exports = function (Bill) {
           })
         }
       })
-    } else if (date['type'] == "inner") {
-
+    } else if (mainData['type'] == "inner") {
+      Bill.app.models.innerBill.find({
+        "where": {
+          "tripId": mainData['tripId']
+        }
+      }, function (err, data) {
+        if (err)
+          return next(err, null)
+        if (data[0] != null) {
+          console.log("Found Inner Bill")
+          context.req.body.innerBillId = data[0].id
+          delete context.req.body['type'];
+          delete context.req.body['tripId'];
+          delete context.req.body['ownerId'];
+          next();
+        } else {
+          console.log("Not Found Inner Bill")
+          Bill.app.models.innerBill.create({
+            "tripId": mainData['tripId'],
+            "ownerId": mainData['ownerId']
+          }, function (err, data) {
+            if (err)
+              return next(err, null)
+            context.req.body.innerBillId = data.id
+            Bill.app.models.trip.findById(mainData['tripId'], function (err, trip) {
+              if (err)
+                return next(err, null)
+              trip.hasInnerBill = true;
+              trip.save()
+              delete context.req.body['type'];
+              delete context.req.body['ownerId'];
+              delete context.req.body['tripId'];
+              next();
+            })
+          })
+        }
+      })
     }
   })
 };
