@@ -411,11 +411,11 @@ module.exports = function (Trip) {
         if (newStatus != 'finished') {
           callback(null, trip[0]);
         } else {
-          Trip.app.models.Usernotification.sendRateNotification(trip[0].ownerId, trip[0].id, trip[0].owner.firbaseToken, function (err) {
-            if (err)
-              console.log(err)
-            callback(null, trip[0]);
-          })
+          // Trip.app.models.Usernotification.sendRateNotification(trip[0].ownerId, trip[0].id, trip[0].owner.firbaseToken, function (err) {
+          //   if (err)
+          //     console.log(err)
+          callback(null, trip[0]);
+          // })
         }
       })
   };

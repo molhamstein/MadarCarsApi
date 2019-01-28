@@ -293,7 +293,7 @@ module.exports = function (User) {
   function sendSMS(from, to, callback) {
     client.messages.create({
         body: 'Hello from Node',
-        to: to, // Text this number
+        to: to, // +1 720 636 9085 Text this number
         from: from // from: '+963 957 465 876' // From a valid Twilio number
       })
       .then((message) => console.log(message.sid))
