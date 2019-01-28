@@ -252,7 +252,7 @@ module.exports = function (User) {
       if (users.length != 0)
         return next(errors.user.phoneNumberOrUsernameIsUsed());
 
-      if (context.req.body.mediaId == undefined) {
+      if (context.req.body.url != undefined) {
         User.app.models.Media.create({
           "thumb": context.req.body.url,
           "url": context.req.body.url
@@ -317,7 +317,7 @@ module.exports = function (User) {
     User.findById(userId, function (err, user) {
       if (err)
         return callback(err, null);
-      User.app.models.Firbasetoken.delete({
+      User.app.models.Firbasetoken.destroyAll({
         "deviceId": deviceId,
         "userId": userId
       }, function (err, data) {
