@@ -266,7 +266,8 @@ module.exports = function (User) {
         })
       } else {
         // sendSMS(context.req.body.phoneNumber, function () {})
-        context.req.body.mediaId = "5c51a99cfa7f1b54df4e285b"
+        if (context.req.body.mediaId == undefined)
+          context.req.body.mediaId = "5c51a99cfa7f1b54df4e285b"
         next();
 
       }
