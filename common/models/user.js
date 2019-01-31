@@ -293,17 +293,32 @@ module.exports = function (User) {
   };
 
   function sendSMS(from, to, callback) {
-    client.messages.create({
-        body: 'Hello from Node',
-        to: to, // +1 720 636 9085 Text this number
-        from: from // from: '+963 957 465 876' // From a valid Twilio number
-      })
-      .then((message) => console.log(message.sid))
-      .catch(function (reason) {
-        // rejection
-        console.log(reason)
-      });
+    // client.messages.create({
+    //     body: 'Hello from Node',
+    //     to: to, // +1 720 636 9085 Text this number
+    //     from: from // from: '+963 957 465 876' // From a valid Twilio number
+    //   })
+    //   .then((message) => console.log(message.sid))
+    //   .catch(function (reason) {
+    //     // rejection
+    //     console.log(reason)
+    //   });
     // callback();
+    // var sinchAuth = require('sinch-auth');
+    // var sinchSms = require('sinch-messaging');
+    // var auth = sinchAuth("fba316e8-69a8-4c11-ae17-b18ad1e16234", "ivqHSHS/fEOEOnPcJVPPNg==");
+    // sinchSms.sendMessage("+963933074900", "Hello world!");
+  // sinchMessaging.sendMessage = function (phoneNumber, message) {
+	// var auth = sinchAuth();
+  //   var options = {
+  //       method: 'POST',
+  //       url : "https://messagingApi.sinch.com/v1/sms/" + phoneNumber,
+  //       headers : {
+  //           "Content-Type" : "application/json",
+  //           "Authorization" : auth
+  //       },
+  //       body: "{"Message":"" + message + ""}"
+  //   };
   }
 
 

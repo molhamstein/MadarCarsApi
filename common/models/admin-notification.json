@@ -5,6 +5,12 @@
   "options": {
     "validateUpsert": true
   },
+  "scope": {
+    "include": [{
+        "relation": "user"
+      }
+    ]
+  },
   "properties": {
     "type": {
       "type": "string",
@@ -14,6 +20,11 @@
       "type": "date",
       "required": true,
       "defaultFn": "now"
+    },
+    "isSeen": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     }
   },
   "validations": [],
