@@ -5,10 +5,12 @@ var _ = require('lodash');
 
 const type = ['fromAirport', 'city', 'toAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'cityAndToAirport', 'fromAirportAndCityAndToAirport']
 module.exports = function (Trip) {
-  Trip.validatesInclusionOf('type', { in: ['city', 'fromAirport', 'toAirport', 'cityAndToAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'fromAirportAndCityAndToAirport']
+  Trip.validatesInclusionOf('type', {
+    in: ['city', 'fromAirport', 'toAirport', 'cityAndToAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'fromAirportAndCityAndToAirport']
   });
 
-  Trip.validatesInclusionOf('status', { in: ['pending', 'approved', 'active', 'deactive', 'finished']
+  Trip.validatesInclusionOf('status', {
+    in: ['pending', 'approved', 'active', 'deactive', 'finished']
   });
 
   Trip.beforeRemote('create', function (context, result, next) {
@@ -411,11 +413,11 @@ module.exports = function (Trip) {
         if (newStatus != 'finished') {
           callback(null, trip[0]);
         } else {
-          // Trip.app.models.Usernotification.sendRateNotification(trip[0].ownerId, trip[0].id, trip[0].owner.firbaseToken, function (err) {
-          //   if (err)
-          //     console.log(err)
-          callback(null, trip[0]);
-          // })
+          Trip.app.models.userNotification.sendRateNotification(trip[0].ownerId, trip[0].id, function (err) {
+            if (err)
+              console.log(err)
+            callback(null, trip[0]);
+          })
         }
       })
   };

@@ -6,7 +6,8 @@
     "validateUpsert": true
   },
   "scope": {
-    "include": [{
+    "include": [
+      {
         "relation": "user"
       }
     ]
@@ -38,7 +39,8 @@
       }
     }
   },
-  "acls": [{
+  "acls": [
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -60,26 +62,32 @@
   ],
   "methods": {
     "needHelp": {
-      "accepts": [{
-        "arg": "context",
-        "type": "object",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "context"
+      "accepts": [
+        {
+          "arg": "context",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "context"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/needHelp",
-        "verb": "post"
-      }]
+      "http": [
+        {
+          "path": "/needHelp",
+          "verb": "post"
+        }
+      ]
     }
   }
 }

@@ -14,6 +14,8 @@ module.exports = function (User) {
   });
 
 
+
+
   User.login = function (credentials, include, fn) {
     var self = this;
     if (typeof include === 'function') {
@@ -276,7 +278,17 @@ module.exports = function (User) {
 
   User.afterRemote('create', function (ctx, result, next) {
     // sendSMS(ctx.req.body.phoneNumber, function () {})
-    next()
+    var code = Math.floor(100000 + Math.random() * 900000)
+    User.app.models.Code.create({
+      "userId": result.id,
+      "code": code
+    }, function (err, codeData) {
+      if (err)
+        return next(err)
+      sendSMS(ctx.req.body.phoneNumber, code, function () {
+        next(null, codeData)
+      });
+    })
   })
 
 
@@ -288,37 +300,26 @@ module.exports = function (User) {
    */
 
   User.sendMsg = function (from, to, callback) {
-    sendSMS(from, to, function () {})
-    callback(null);
+    var code = Math.floor(100000 + Math.random() * 900000)
+    User.app.models.Code.create({
+      "userId": from,
+      "code": code
+    }, function (err, codeData) {
+      if (err)
+        return callback(err)
+      sendSMS(from, code, function () {
+        callback(null, codeData)
+      });
+    })
   };
 
-  function sendSMS(from, to, callback) {
-    // client.messages.create({
-    //     body: 'Hello from Node',
-    //     to: to, // +1 720 636 9085 Text this number
-    //     from: from // from: '+963 957 465 876' // From a valid Twilio number
-    //   })
-    //   .then((message) => console.log(message.sid))
-    //   .catch(function (reason) {
-    //     // rejection
-    //     console.log(reason)
-    //   });
-    // callback();
+  function sendSMS(from, code, callback) {
+    // console.log(code);
     // var sinchAuth = require('sinch-auth');
     // var sinchSms = require('sinch-messaging');
     // var auth = sinchAuth("fba316e8-69a8-4c11-ae17-b18ad1e16234", "ivqHSHS/fEOEOnPcJVPPNg==");
-    // sinchSms.sendMessage("+963933074900", "Hello world!");
-  // sinchMessaging.sendMessage = function (phoneNumber, message) {
-	// var auth = sinchAuth();
-  //   var options = {
-  //       method: 'POST',
-  //       url : "https://messagingApi.sinch.com/v1/sms/" + phoneNumber,
-  //       headers : {
-  //           "Content-Type" : "application/json",
-  //           "Authorization" : auth
-  //       },
-  //       body: "{"Message":"" + message + ""}"
-  //   };
+    // sinchSms.sendMessage("+963957465876", "your verification code is : " + code);
+    callback();
   }
 
 
@@ -334,7 +335,7 @@ module.exports = function (User) {
     User.findById(userId, function (err, user) {
       if (err)
         return callback(err, null);
-      User.app.models.Firbasetoken.destroyAll({
+      User.app.models.firbaseToken.destroyAll({
         "deviceId": deviceId,
         "userId": userId
       }, function (err, data) {
@@ -460,6 +461,106 @@ module.exports = function (User) {
       })
     })
   };
+
+  /**
+   *
+   * @param {number} code
+   * @param {Function(Error, number)} callback
+   */
+
+  User.activateUser = function (code, context, callback) {
+    var returnCode = 200;
+    var userId = context.req.accessToken.userId;
+    console.log(userId);
+    User.app.models.Code.find({
+      "where": {
+        "code": code,
+        "userId": userId,
+        "type": "activate"
+      }
+    }, function (err, codes) {
+      if (err)
+        return callback(err, null);
+      console.log(userId)
+      console.log(codes)
+      if (codes[0] == null)
+        return callback(null, errors.user.codeNotFound())
+      User.findById(userId, function (err, user) {
+        if (err)
+          return callback(err, null);
+        user.status = "active"
+        user.save()
+        return callback(err, returnCode)
+      })
+    })
+  };
+
+  User.resetPasswordUser = function (password, phoneNumber, code, callback) {
+    var returnCode = 200;
+    User.findOne({
+      "where": {
+        "phoneNumber": phoneNumber
+      }
+    }, function (err, user) {
+      if (err)
+        return callback(err, null);
+      if (user == null)
+        return callback(null, errors.user.userNotFound())
+
+      User.app.models.Code.find({
+        "where": {
+          "code": code,
+          "userId": user.id,
+          "type": "reset"
+        }
+      }, function (err, codes) {
+        if (err)
+          return callback(err, null);
+        if (codes[0] == null)
+          return callback(null, errors.user.codeNotFound())
+        user.updateAttributes({
+          'password': User.hashPassword(password),
+        }, function (err) {
+          if (err) {
+            return callback(err, null)
+          }
+          return callback(null, returnCode)
+        })
+      })
+    })
+  };
+
+  User.forgetPassword = function (phoneNumber, callback) {
+    var returnCode = 200;
+    User.findOne({
+      "where": {
+        "phoneNumber": phoneNumber,
+        "status": "active"
+      }
+    }, function (err, user) {
+      if (err)
+        return callback(err, null);
+      if (user == null)
+        return callback(null, errors.user.userNotFound())
+      var code = Math.floor(100000 + Math.random() * 900000)
+      User.app.models.Code.create({
+        "userId": user.id,
+        "code": code,
+        "type": "reset"
+      }, function (err, codeData) {
+        if (err)
+          return callback(err)
+        sendSMS(phoneNumber, code, function () {
+          callback(null, returnCode)
+        });
+      })
+
+    })
+  };
+
+
+
+
 
 
   User.setFirebaseToken = function (token, req, callback) {

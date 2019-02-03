@@ -26,6 +26,9 @@ module.exports.user = {
   },
   phoneNumberOrUsernameIsUsed: function () {
     return new cError(451, 'phonenumber or username is used', 451);
+  },
+  codeNotFound: function () {
+    return new cError(460, 'code not found', 460);
   }
 };
 

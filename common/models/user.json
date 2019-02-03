@@ -113,6 +113,27 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
+      "property": "activateUser"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "ALLOW",
+      "property": "forgetPassword"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "ALLOW",
+      "property": "resetPasswordUser"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
       "property": "me"
     },
     {
@@ -331,6 +352,87 @@
         "path": "/logOut",
         "verb": "put"
       }]
+    },
+    "activateUser": {
+      "accepts": [{
+          "arg": "code",
+          "type": "number",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "context",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "context"
+          }
+        }
+      ],
+      "returns": [{
+        "arg": "code",
+        "type": "number",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/activateUser",
+        "verb": "put"
+      }]
+    },
+    "forgetPassword": {
+      "accepts": [{
+        "arg": "phoneNumber",
+        "type": "string",
+        "required": true,
+        "description": ""
+      }],
+      "returns": [{
+        "arg": "code",
+        "type": "number",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/forgetPassword",
+        "verb": "post"
+      }]
+    },
+    "resetPasswordUser": {
+      "accepts": [{
+          "arg": "password",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "phoneNumber",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "code",
+          "type": "number",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [{
+        "arg": "code",
+        "type": "number",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/resetPasswordUser",
+        "verb": "put"
+      }]
     }
+
   }
 }

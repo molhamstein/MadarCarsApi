@@ -11,10 +11,11 @@ var serverKey = config.serverKey; //put your server key here
 var fcm = new FCM(serverKey);
 
 module.exports = function (Usernotification) {
-  Usernotification.validatesInclusionOf('type', { in: ['rate']
+  Usernotification.validatesInclusionOf('type', {
+    in: ['rate']
   });
 
-  function sendRateNotification(userId, tripId, callback) {
+  Usernotification.sendRateNotification = function (userId, tripId, callback) {
 
     Usernotification.create({
       "type": "rate",
@@ -23,14 +24,16 @@ module.exports = function (Usernotification) {
     }, function (err, data) {
       if (err)
         return callback(err)
-      Usernotification.app.models.Firbasetoken.find({
+      Usernotification.app.models.firbaseToken.find({
         "where": {
           "userId": userId
         }
       }, function (err, data) {
         if (err)
           return callback(err)
-
+        if (data.length == 0) {
+          return callback(null);
+        }
         for (let index = 0; index < data.length; index++) {
           const element = data[index];
 
