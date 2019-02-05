@@ -14,8 +14,7 @@
     "realm"
   ],
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "driverLangs"
       },
       {
@@ -52,6 +51,9 @@
       "type": "date",
       "required": true,
       "defaultFn": "now"
+    },
+    "birthdate": {
+      "type": "date"
     }
   },
   "validations": [],
@@ -73,8 +75,7 @@
       }
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
