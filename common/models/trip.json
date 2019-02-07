@@ -7,8 +7,7 @@
   },
   "replaceOnPUT": false,
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "owner"
       },
       {
@@ -144,10 +143,17 @@
       "options": {
         "nestRemoting": true
       }
+    },
+    "rate": {
+      "type": "belongsTo",
+      "model": "rate",
+      "foreignKey": "rateId",
+      "options": {
+        "nestRemoting": true
+      }
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -196,36 +202,29 @@
   ],
   "methods": {
     "getMyTrip": {
-      "accepts": [
-        {
-          "arg": "req",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "req"
-          }
+      "accepts": [{
+        "arg": "req",
+        "type": "object",
+        "required": true,
+        "description": "",
+        "http": {
+          "source": "req"
         }
-      ],
-      "returns": [
-        {
-          "arg": "result",
-          "type": "array",
-          "root": true,
-          "description": ""
-        }
-      ],
+      }],
+      "returns": [{
+        "arg": "result",
+        "type": "array",
+        "root": true,
+        "description": ""
+      }],
       "description": "",
-      "http": [
-        {
-          "path": "/getMyTrip",
-          "verb": "get"
-        }
-      ]
+      "http": [{
+        "path": "/getMyTrip",
+        "verb": "get"
+      }]
     },
     "changeStatus": {
-      "accepts": [
-        {
+      "accepts": [{
           "arg": "id",
           "type": "string",
           "required": true,
@@ -241,25 +240,20 @@
           "description": ""
         }
       ],
-      "returns": [
-        {
-          "arg": "result",
-          "type": "object",
-          "root": true,
-          "description": ""
-        }
-      ],
+      "returns": [{
+        "arg": "result",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
       "description": "",
-      "http": [
-        {
-          "path": "/changeStatus/:id",
-          "verb": "put"
-        }
-      ]
+      "http": [{
+        "path": "/changeStatus/:id",
+        "verb": "put"
+      }]
     },
     "changemyTripStatus": {
-      "accepts": [
-        {
+      "accepts": [{
           "arg": "id",
           "type": "string",
           "required": true,
@@ -284,25 +278,20 @@
           }
         }
       ],
-      "returns": [
-        {
-          "arg": "result",
-          "type": "object",
-          "root": true,
-          "description": ""
-        }
-      ],
+      "returns": [{
+        "arg": "result",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
       "description": "",
-      "http": [
-        {
-          "path": "/changemyTripStatus/:id",
-          "verb": "put"
-        }
-      ]
+      "http": [{
+        "path": "/changemyTripStatus/:id",
+        "verb": "put"
+      }]
     },
     "editMethod": {
-      "accepts": [
-        {
+      "accepts": [{
           "arg": "data",
           "type": "object",
           "required": true,
@@ -327,21 +316,17 @@
           }
         }
       ],
-      "returns": [
-        {
-          "arg": "data",
-          "type": "object",
-          "root": true,
-          "description": ""
-        }
-      ],
+      "returns": [{
+        "arg": "data",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
       "description": "",
-      "http": [
-        {
-          "path": "/editMethod/:id",
-          "verb": "put"
-        }
-      ]
+      "http": [{
+        "path": "/editMethod/:id",
+        "verb": "put"
+      }]
     }
   }
 }

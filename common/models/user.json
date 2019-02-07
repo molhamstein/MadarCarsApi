@@ -15,7 +15,8 @@
     "email"
   ],
   "scope": {
-    "include": [{
+    "include": [
+      {
         "relation": "country"
       },
       {
@@ -74,7 +75,8 @@
       }
     }
   },
-  "acls": [{
+  "acls": [
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "admin",
@@ -152,8 +154,65 @@
     }
   ],
   "methods": {
+    "deactivate": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/deactivate/:id",
+          "verb": "delete"
+        }
+      ]
+    },
+    "activate": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/activate/:id",
+          "verb": "put"
+        }
+      ]
+    },
     "resetPassword": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "userId",
           "type": "string",
           "required": true,
@@ -166,145 +225,130 @@
           "description": ""
         }
       ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/resetPassword",
-        "verb": "put"
-      }]
-    },
-    "deactivate": {
-      "accepts": [{
-        "arg": "id",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
         }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      ],
       "description": "",
-      "http": [{
-        "path": "/deactivate/:id",
-        "verb": "delete"
-      }]
-    },
-    "activate": {
-      "accepts": [{
-        "arg": "id",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
+      "http": [
+        {
+          "path": "/resetPassword",
+          "verb": "put"
         }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/activate/:id",
-        "verb": "put"
-      }]
+      ]
     },
     "facebookLogin": {
-      "accepts": [{
-        "arg": "req",
-        "type": "object",
-        "http": {
-          "source": "req"
+      "accepts": [
+        {
+          "arg": "req",
+          "type": "object",
+          "http": {
+            "source": "req"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/facebookLogin",
-        "verb": "post"
-      }]
+      "http": [
+        {
+          "path": "/facebookLogin",
+          "verb": "post"
+        }
+      ]
     },
     "googleLogin": {
-      "accepts": [{
-        "arg": "req",
-        "type": "object",
-        "http": {
-          "source": "req"
+      "accepts": [
+        {
+          "arg": "req",
+          "type": "object",
+          "http": {
+            "source": "req"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/googleLogin",
-        "verb": "post"
-      }]
+      "http": [
+        {
+          "path": "/googleLogin",
+          "verb": "post"
+        }
+      ]
     },
     "me": {
-      "accepts": [{
-        "arg": "context",
-        "type": "object",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "context"
+      "accepts": [
+        {
+          "arg": "context",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "context"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/me",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/me",
+          "verb": "get"
+        }
+      ]
     },
     "getEnd": {
-      "accepts": [{
-        "arg": "limit",
-        "type": "number",
-        "required": true,
-        "description": ""
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      "accepts": [
+        {
+          "arg": "limit",
+          "type": "number",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/getEnd",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/getEnd",
+          "verb": "get"
+        }
+      ]
     },
     "sendMsg": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "from",
           "type": "string",
           "required": true,
@@ -319,13 +363,16 @@
       ],
       "returns": [],
       "description": "",
-      "http": [{
-        "path": "/sendMsg",
-        "verb": "post"
-      }]
+      "http": [
+        {
+          "path": "/sendMsg",
+          "verb": "post"
+        }
+      ]
     },
     "logOut": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "deviceId",
           "type": "string",
           "required": true,
@@ -341,20 +388,25 @@
           }
         }
       ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/logOut",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/logOut",
+          "verb": "put"
+        }
+      ]
     },
     "activateUser": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "code",
           "type": "number",
           "required": true,
@@ -370,39 +422,50 @@
           }
         }
       ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/activateUser",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/activateUser",
+          "verb": "put"
+        }
+      ]
     },
     "forgetPassword": {
-      "accepts": [{
-        "arg": "phoneNumber",
-        "type": "string",
-        "required": true,
-        "description": ""
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "accepts": [
+        {
+          "arg": "phoneNumber",
+          "type": "string",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/forgetPassword",
-        "verb": "post"
-      }]
+      "http": [
+        {
+          "path": "/forgetPassword",
+          "verb": "post"
+        }
+      ]
     },
     "resetPasswordUser": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "password",
           "type": "string",
           "required": true,
@@ -421,18 +484,21 @@
           "description": ""
         }
       ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/resetPasswordUser",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/resetPasswordUser",
+          "verb": "put"
+        }
+      ]
     }
-
   }
 }

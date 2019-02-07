@@ -14,7 +14,8 @@
     "realm"
   ],
   "scope": {
-    "include": [{
+    "include": [
+      {
         "relation": "driverLangs"
       },
       {
@@ -75,7 +76,8 @@
       }
     }
   },
-  "acls": [{
+  "acls": [
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
