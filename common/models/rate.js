@@ -98,4 +98,181 @@ module.exports = function (Rate) {
     })
   };
 
+
+
+  /**
+   *
+   * @param {object} filter
+   * @param {Function(Error, array)} callback
+   */
+
+  Rate.getByFilter = function (filter, callback) {
+    var limit = 10;
+    var skip = 0;
+    var where = []
+    if (filter && filter['limit'] != null) {
+      limit = filter['limit'];
+      delete filter['limit']
+    }
+    if (filter && filter['skip'] != null) {
+      skip = filter['skip'];
+      delete filter['skip']
+
+    }
+    console.log("filter.length")
+    console.log(filter)
+    if (filter != {}) {
+      where = [{
+        $match: filter
+      }, {
+        "$skip": skip
+      }, {
+        "$limit": limit
+      }, {
+        $project: {
+          "_id": 0,
+          "id": "$_id",
+          "value": 1,
+          "createdAt": 1,
+          "carId": 1,
+          "ownerId": 1,
+          "tripId": 1,
+          "trip": 1,
+          "car": 1,
+          "user": 1,
+        }
+      }]
+    } else {
+      where = [{
+        "$limit": limit
+      }, {
+        "$skip": skip
+      }, {
+        $project: {
+          "_id": 0,
+          "id": "$_id",
+          "value": 1,
+          "createdAt": 1,
+          "carId": 1,
+          "ownerId": 1,
+          "tripId": 1,
+          "trip": 1,
+          "car": 1,
+          "user": 1,
+        }
+      }]
+    }
+    Rate.getDataSource().connector.connect(function (err, db) {
+      console.log(where);
+      var collection = db.collection('rate');
+      var cursor = collection.aggregate(where)
+      cursor.get(function (err, data) {
+        if (err) return callback(err);
+        console.log(data.length)
+        return callback(null, data);
+      })
+    })
+    // TODO
+    // callback(null, result);
+  };
+
+  Rate.getEndByFilter = function (filter, callback) {
+    var limit = 10;
+    var where = []
+    if (filter && filter['limit'] != null) {
+      limit = filter['limit'];
+      delete filter['limit']
+    }
+
+    Rate.count({}, function (err, count) {
+      console.log(count);
+      var skip = 0
+      if (limit < count) {
+        var mod = count % limit;
+        var div = parseInt(count / limit);
+        console.log("mod");
+        console.log(count / limit);
+        if (mod == 0)
+          skip = count - limit
+        else
+          skip = (div * limit);
+      }
+      if (filter) {
+        where = [{
+          $match: filter
+        }, {
+          "$limit": limit
+        }, {
+          "$skip": skip
+        }, {
+          $project: {
+            "id": "_id",
+          }
+        }]
+      } else {
+        where = [{
+          "$limit": limit
+        }, {
+          "$skip": skip
+        }, {
+          $project: {
+            "id": "_id",
+          }
+        }]
+      }
+      Rate.getDataSource().connector.connect(function (err, db) {
+        console.log(where);
+        var collection = db.collection('rate');
+        var cursor = collection.aggregate(where)
+        cursor.get(function (err, data) {
+          if (err) return callback(err);
+          console.log(data.length)
+          return callback(null, {
+            "data": data,
+            "count": count
+          })
+
+        })
+      })
+      // Trip.find({
+      //   "skip": skip,
+      //   "limit": limit
+      // }, function (err, data) {
+      //   callback(null, {
+      //     "data": data,
+      //     "count": count
+      //   })
+      // })
+
+    })
+  };
+
+  Rate.getEnd = function (limit, callback) {
+    Rate.count({}, function (err, count) {
+      console.log(count);
+      var skip = 0
+      if (limit < count) {
+        var mod = count % limit;
+        var div = parseInt(count / limit);
+        console.log("mod");
+        console.log(count / limit);
+        if (mod == 0)
+          skip = count - limit
+        else
+          skip = (div * limit);
+      }
+
+      Rate.find({
+        "skip": skip,
+        "limit": limit
+      }, function (err, data) {
+        callback(null, {
+          "data": data,
+          "count": count
+        })
+      })
+
+    })
+  };
+
 };

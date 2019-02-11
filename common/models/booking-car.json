@@ -14,7 +14,12 @@
       "type": "date",
       "required": true
     },
-    "craterdAt": {
+    "type": {
+      "type": "string",
+      "required": true,
+      "default": "trip"
+    },
+    "createdAt": {
       "type": "date",
       "required": true,
       "defaultFn": "now"
@@ -39,6 +44,61 @@
       }
     }
   },
-  "acls": [],
-  "methods": {}
+  "acls": [
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "addVacation"
+    }
+  ],
+  "methods": {
+    "addVacation": {
+      "accepts": [
+        {
+          "arg": "start",
+          "type": "date",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "form"
+          }
+        },
+        {
+          "arg": "end",
+          "type": "date",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "form"
+          }
+        },
+        {
+          "arg": "carId",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "form"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/addVacation",
+          "verb": "post"
+        }
+      ]
+    }
+  }
 }

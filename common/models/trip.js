@@ -422,6 +422,36 @@ module.exports = function (Trip) {
       })
   };
 
+
+  Trip.getEnd = function (limit, callback) {
+    Trip.count({}, function (err, count) {
+      console.log(count);
+      var skip = 0
+      if (limit < count) {
+        var mod = count % limit;
+        var div = parseInt(count / limit);
+        console.log("mod");
+        console.log(count / limit);
+        if (mod == 0)
+          skip = count - limit
+        else
+          skip = (div * limit);
+      }
+
+      Trip.find({
+        "skip": skip,
+        "limit": limit
+      }, function (err, data) {
+        callback(null, {
+          "data": data,
+          "count": count
+        })
+      })
+
+    })
+  };
+
+
   /**
    *
    * @param {string} id

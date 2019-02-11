@@ -1,0 +1,85 @@
+{
+  "name": "agency",
+  "base": "User",
+  "options": {
+    "validateUpsert": true,
+    "ttl": 31536000000
+  },
+  "replaceOnPUT": false,
+  "hidden": [
+    "password",
+    "verificationToken",
+    "emailVerified",
+    "realm"
+  ],
+  "scope": {
+    "include": [
+      {
+        "relation": "country"
+      },
+      {
+        "relation": "media"
+      }
+    ]
+  },
+  "properties": {
+    "nameEn": {
+      "type": "string",
+      "required": true
+    },
+    "nameAr": {
+      "type": "string",
+      "required": true
+    },
+    "nameTr": {
+      "type": "string",
+      "required": false
+    },
+    "phoneNumber": {
+      "type": "string",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "default": "active"
+    },
+    "createdAt": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "country": {
+      "type": "belongsTo",
+      "model": "country",
+      "foreignKey": "ISOCode"
+    },
+    "media": {
+      "type": "belongsTo",
+      "model": "media",
+      "foreignKey": "mediaId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "resetPassword"
+    }
+  ],
+  "methods": {}
+}

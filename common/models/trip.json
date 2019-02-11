@@ -30,6 +30,10 @@
       "required": true,
       "default": "pending"
     },
+    "note": {
+      "type": "string",
+      "required": false
+    },
     "type": {
       "type": "string"
     },
@@ -195,12 +199,38 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "getEnd"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
       "property": "changemyTripStatus"
     }
   ],
   "methods": {
+    "getEnd": {
+      "accepts": [{
+        "arg": "limit",
+        "type": "number",
+        "required": true,
+        "description": ""
+      }],
+      "returns": [{
+        "arg": "result",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/getEnd",
+        "verb": "get"
+      }]
+    },
     "getMyTrip": {
       "accepts": [{
         "arg": "req",
