@@ -9,7 +9,8 @@ module.exports = function (Car) {
   // Car.validatesInclusionOf('type', { in: ['sport', 'ceremony']
   // });
 
-  Car.validatesInclusionOf('status', { in: ['active', 'deactive']
+  Car.validatesInclusionOf('status', {
+    in: ['active', 'deactive']
   });
 
 
@@ -132,6 +133,11 @@ module.exports = function (Car) {
     })
   };
 
+  function calculateAge(birthday) { // birthday is a date
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
 
   Car.activate = function (id, callback) {
     var code = 200;
@@ -160,8 +166,13 @@ module.exports = function (Car) {
    * @param {Function(Error, array)} callback
    */
 
-  Car.getAvailable = function (flags, dates, locationId, filter, langFilter, tripId, callback) {
-
+  Car.getAvailable = function (flags, dates, locationId, filter, langFilter, tripId, driverAge, callback) {
+    if (driverAge == undefined) {
+      driverAge = {
+        "min": 0,
+        "max": 100
+      }
+    }
     if (filter == null) {
       var filter = {}
       filter["where"] = {}
@@ -215,9 +226,6 @@ module.exports = function (Car) {
       Car.app.models.bookingCar.find(mainWher, function (err, data) {
         if (err)
           return callback(err)
-
-        // console.log("object.where");
-        // console.log(object.where);
         console.log("Data");
         console.log(data);
         data.forEach(function (element) {
@@ -227,35 +235,59 @@ module.exports = function (Car) {
         }, this);
         var popCarIds = [];
         if (langFilter == undefined) {
-          return callback(null, cars);
-        }
-        cars.forEach(function (oneCar, carIndex) {
-          oneCar.driver.get(function (err, driver) {
-            driver.driverLangs(function (err, data) {
-              langFilter.forEach(function (oneLangFilter, langIndex) {
-                var index =
-                  data.find(function (element) {
-                    return element.landuageId == oneLangFilter;
-                  });
-                if (index == undefined) {
-                  console.log("push Out")
-                  popCarIds.push(oneCar.id);
-                }
-                if (carIndex + 1 == cars.length && langIndex + 1 == langFilter.length) {
-                  console.log("test");
-                  console.log(popCarIds)
+          console.log("cars")
+          for (let index = 0; index < cars.length; index++) {
+            const element = cars[index];
+            element.driver.get(function (err, driver) {
+              console.log();
+              var driverBirthdate = calculateAge(driver.birthdate)
+              if (driverBirthdate < driverAge.min || driverBirthdate > driverAge.max) {
+                console.log("push Out")
+                popCarIds.push(element.id);
+              }
+              if (index == cars.length - 1) {
+                console.log("popCarIds");
+                console.log(popCarIds);
+                if (popCarIds.length != 0)
                   popCarIds.forEach(function (element) {
                     cars.splice(cars.findIndex(function (i) {
                       return i.id == element;
                     }), 1);
                   }, this);
-                  return callback(null, cars);
-                }
-              }, this);
+                return callback(null, cars);
+              }
             })
+          }
+        } else {
+          cars.forEach(function (oneCar, carIndex) {
+            oneCar.driver.get(function (err, driver) {
+              driver.driverLangs(function (err, data) {
+                langFilter.forEach(function (oneLangFilter, langIndex) {
+                  var index =
+                    data.find(function (element) {
+                      return element.landuageId == oneLangFilter;
+                    });
+                  var driverBirthdate = calculateAge(driver.birthdate)
+                  if (index == undefined || driverBirthdate < driverAge.min || driverBirthdate > driverAge.max) {
+                    console.log("push Out")
+                    popCarIds.push(oneCar.id);
+                  }
+                  if (carIndex + 1 == cars.length && langIndex + 1 == langFilter.length) {
+                    console.log("test");
+                    console.log(popCarIds)
+                    popCarIds.forEach(function (element) {
+                      cars.splice(cars.findIndex(function (i) {
+                        return i.id == element;
+                      }), 1);
+                    }, this);
+                    return callback(null, cars);
+                  }
+                }, this);
+              })
 
-          })
-        }, this);
+            })
+          }, this);
+        }
       })
 
     })

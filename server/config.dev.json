@@ -1,30 +1,31 @@
 {
-    "restApiRoot": "/api",
-    "host": "0.0.0.0",
-    "domain": "http://104.217.253.15:3006",
-    "serverKey":"AAAA1fioJ8c:APA91bEoNNGkqTPXgfjOWLt7ooPjRqIptBPzw2Skss3kCkfLXgdwllrkZ2sTWXtsY8NznlH8uZsF2JkCzVO5Pr7YH_NOJQy8RboV_QwLTTfG-8jsn0xGrgQYi6IQUB5S5B1nQJkowQ8P",
-    "siteDomain": "http://104.217.253.15:3006",
-    "thumbUrl": "C:/FFmpeg/bin/",
-    "programFFmpegName": [
-        "ffmpeg.exe",
-        "ffprobe.exe"
-    ],
-    "port": 3006,
-    "remoting": {
-        "context": false,
-        "rest": {
-            "handleErrors": false,
-            "normalizeHttpPath": false,
-            "xml": false
-        },
-        "json": {
-            "strict": false,
-            "limit": "100kb"
-        },
-        "urlencoded": {
-            "extended": true,
-            "limit": "100kb"
-        },
-        "cors": false
-    }
+  "restApiRoot": "/api",
+  "host": "0.0.0.0",
+  "domain": "http://104.217.253.15:3006",
+  "senderId": "626269671729",
+  "serverKey": "AAAAkdCU0TE:APA91bEtvVL4RLCUidKF9oI5m0XbQtCXepob6O_BiiwWlYk1V-r0cx8qnLHuT7QwsVaLhSEj7Q5RDvOb4NPUj0411gYut8Y0TCj_5Y2F8BYwhYf0_OQDxbinKYmwG0CJ_3ziVSCbm2Yw",
+  "siteDomain": "http://104.217.253.15:3006",
+  "thumbUrl": "C:/FFmpeg/bin/",
+  "programFFmpegName": [
+    "ffmpeg.exe",
+    "ffprobe.exe"
+  ],
+  "port": 3006,
+  "remoting": {
+    "context": false,
+    "rest": {
+      "handleErrors": false,
+      "normalizeHttpPath": false,
+      "xml": false
+    },
+    "json": {
+      "strict": false,
+      "limit": "100kb"
+    },
+    "urlencoded": {
+      "extended": true,
+      "limit": "100kb"
+    },
+    "cors": false
+  }
 }

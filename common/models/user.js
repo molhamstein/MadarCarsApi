@@ -10,7 +10,8 @@ var client = new twilio(accountSid, authToken);
 module.exports = function (User) {
 
 
-  User.validatesInclusionOf('status', { in: ['active', 'deactive', 'pending']
+  User.validatesInclusionOf('status', {
+    in: ['active', 'deactive', 'pending']
   });
 
 
@@ -410,8 +411,10 @@ module.exports = function (User) {
    * @param {Function(Error, array)} callback
    */
 
-  User.getEnd = function (limit, callback) {
-    User.count({}, function (err, count) {
+  User.getEnd = function (filter, callback) {
+    var limit = filter['limit']
+    delete filter['limit']
+    User.count(filter['where'], function (err, count) {
       console.log(count);
       var skip = 0
       if (limit < count) {
@@ -427,7 +430,8 @@ module.exports = function (User) {
 
       User.find({
         "skip": skip,
-        "limit": limit
+        "limit": limit,
+        "where": filter['where']
       }, function (err, data) {
         callback(null, {
           "data": data,

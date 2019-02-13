@@ -206,6 +206,13 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "getTripByFilter"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
       "property": "changemyTripStatus"
@@ -214,8 +221,8 @@
   "methods": {
     "getEnd": {
       "accepts": [{
-        "arg": "limit",
-        "type": "number",
+        "arg": "filter",
+        "type": "object",
         "required": true,
         "description": ""
       }],
@@ -228,6 +235,28 @@
       "description": "",
       "http": [{
         "path": "/getEnd",
+        "verb": "get"
+      }]
+    },
+    "getTripByFilter": {
+      "accepts": [{
+        "arg": "filter",
+        "type": "object",
+        "required": false,
+        "description": "",
+        "http": {
+          "source": "query"
+        }
+      }],
+      "returns": [{
+        "arg": "result",
+        "type": "array",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/getTripByFilter",
         "verb": "get"
       }]
     },
