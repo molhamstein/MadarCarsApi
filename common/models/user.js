@@ -367,6 +367,39 @@ module.exports = function (User) {
     // TODO
   };
 
+  User.updateUser = function (id, data, callback) {
+    var result;
+    User.find({
+      "where": {
+        "id": {
+          "neq": id
+        },
+        "phoneNumber": data.phoneNumber
+      }
+    }, function (err, users) {
+      if (err)
+        return callback(err, null);
+      if (users.length != 0)
+        return callback(errors.user.phoneNumberOrUsernameIsUsed());
+      User.findById(id, function (err, mainUser) {
+        if (err)
+          return callback(err, null)
+        console.log("sss")
+        console.log(data);
+        console.log(mainUser);
+        mainUser.updateAttributes(data, function (err,data) {
+          if (err) {
+            return callback(err, null)
+          }
+          console.log(data)
+          return callback(null,data)
+        })
+
+      })
+    })
+  };
+
+
 
   User.deactivate = function (id, callback) {
     var code = 200;
