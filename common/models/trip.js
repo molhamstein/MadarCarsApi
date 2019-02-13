@@ -835,7 +835,6 @@ module.exports = function (Trip) {
             "hasOuterBill": 1,
             "hasInnerBill": 1,
             "rateId": 1
-
           }
         }, {
           $lookup: {
@@ -887,10 +886,15 @@ module.exports = function (Trip) {
         {
           $unwind: "$driver"
         },
+        // {
+        //   $unwind: "$rate"
+        // },
         {
-          $unwind: "$rate"
-        },
-        {
+          "$unwind": {
+            path: "$rate",
+            preserveNullAndEmptyArrays: true
+          }
+        }, {
           $match: filter
         }, {
           "$skip": skip
