@@ -20,6 +20,9 @@ module.exports = function (Trip) {
       context.req.body.ownerId = context.req.accessToken.userId;
 
     var bookingDate = fillDateOfBooking(data)
+    context.req.body.startDate = bookingDate.start;
+    context.req.body.endDate = bookingDate.end;
+
     data.type = bookingDate.type;
 
     cheackLocation(data.locationId, function (err) {
@@ -157,6 +160,8 @@ module.exports = function (Trip) {
       }
       object.where = whereObject;
       object.type = type[1];
+      object.start = startInCityDate
+      object.end = endInCityDate
       return object;
     } else if (!fromAirport && toAirport && !inCity) {
       console.log("toAirport");
@@ -177,6 +182,8 @@ module.exports = function (Trip) {
       }
       object.where = whereObject;
       object.type = type[2];
+      object.start = toAirportDate
+      object.end = addHours(numHoure, toAirportDate)
       return object;
     } else if (!fromAirport && toAirport && inCity) {
       console.log("inCity && toAirport");
@@ -197,6 +204,8 @@ module.exports = function (Trip) {
         ]
       }
       object.where = whereObject;
+      object.start = startInCityDate
+      object.end = addHours(numHoure, toAirportDate)
 
       return object;
     } else if (fromAirport && !toAirport && !inCity) {
@@ -218,7 +227,8 @@ module.exports = function (Trip) {
         ]
       }
       object.where = whereObject;
-
+      object.start = fromAirportDate
+      object.end = addHours(numHoure, fromAirportDate)
       return object;
     } else if (fromAirport && !toAirport && inCity) {
       console.log("fromAirport && inCity");
@@ -239,6 +249,8 @@ module.exports = function (Trip) {
         ]
       }
       object.where = whereObject;
+      object.start = fromAirportDate
+      object.end = addHours(numHoure, endInCityDate)
 
       return object;
     } else if (fromAirport && toAirport && !inCity) {
@@ -272,6 +284,9 @@ module.exports = function (Trip) {
           }
         ]
       }
+      object.start = fromAirportDate
+      object.end = addHours(numHoure, toAirportDate)
+
       object.where = whereObject;
 
       return object;
@@ -293,6 +308,8 @@ module.exports = function (Trip) {
           }
         ]
       }
+      object.start = fromAirportDate
+      object.end = addHours(numHoure, toAirportDate)
       object.where = whereObject;
       return object;
     }
@@ -422,6 +439,44 @@ module.exports = function (Trip) {
   };
 
 
+  Trip.solvedTrip = function (next) {
+    Trip.find({}, function (err, data) {
+      data.forEach(element => {
+        console.log(element.type)
+        if (element.type == type[1]) {
+          element.startDate = element.startInCityDate
+          element.endDate = element.endInCityDate
+          element.save();
+        } else if (element.type == type[2]) {
+          element.startDate = element.toAirportDate
+          element.endDate = addHours(numHoure, element.toAirportDate)
+          element.save();
+        } else if (element.type == type[5]) {
+          element.startDate = element.startInCityDate
+          element.endDate = addHours(numHoure, element.toAirportDate)
+          element.save();
+        } else if (element.type == type[0]) {
+          element.startDate = element.fromAirportDate
+          element.endDate = addHours(numHoure, element.fromAirportDate)
+          element.save();
+        } else if (element.type == type[3]) {
+          element.startDate = element.fromAirportDate
+          element.endDate = addHours(numHoure, element.endInCityDate)
+          element.save();
+        } else if (element.type == type[4]) {
+          element.startDate = element.fromAirportDate
+          element.endDate = addHours(numHoure, element.toAirportDate)
+          element.save();
+        } else if (element.type == type[6]) {
+          element.startDate = element.fromAirportDate
+          element.endDate = addHours(numHoure, element.toAirportDate)
+          element.save();
+        }
+      });
+    })
+  }
+
+
   Trip.getEnd = function (filter, callback) {
     var limit = 10;
     var where = []
@@ -431,6 +486,17 @@ module.exports = function (Trip) {
     }
 
     if (filter != {} && filter != undefined) {
+      for (let index = 0; index < filter["$and"].length; index++) {
+        const element = filter["$and"][index];
+        if (element["endDate"] != null) {
+          console.log(element["endDate"]["$gt"])
+          filter["$and"][index]["endDate"]["$gt"] = new Date(element["endDate"]["$gt"]);
+        }
+        if (element["startDate"] != null) {
+          console.log(element["startDate"]["$lt"])
+          filter["$and"][index]["startDate"]["$lt"] = new Date(element["startDate"]["$lt"]);
+        }
+      }
       where = [{
           $project: {
             "_id": 0,
@@ -457,8 +523,9 @@ module.exports = function (Trip) {
             "inCity": 1,
             "hasOuterBill": 1,
             "hasInnerBill": 1,
-            "rateId": 1
-
+            "rateId": 1,
+            "endDate": 1,
+            "startDate": 1
           }
         }, {
           $lookup: {
@@ -701,6 +768,9 @@ module.exports = function (Trip) {
 
       var bookingDate = fillDateOfBooking(data)
       data.type = bookingDate.type;
+      data.startDate = bookingDate.start;
+      data.endDate = bookingDate.end;
+
       // userData.updateAttributes({
 
       cheackLocation(data.locationId, function (err) {
@@ -805,9 +875,20 @@ module.exports = function (Trip) {
       delete filter['skip']
 
     }
-    console.log("filter.length")
-    console.log(filter)
+    // console.log("filter.length")
+    // console.log(filter)
     if (filter != {} && filter != undefined) {
+      for (let index = 0; index < filter["$and"].length; index++) {
+        const element = filter["$and"][index];
+        if (element["endDate"] != null) {
+          console.log(element["endDate"]["$gt"])
+          filter["$and"][index]["endDate"]["$gt"] = new Date(element["endDate"]["$gt"]);
+        }
+        if (element["startDate"] != null) {
+          console.log(element["startDate"]["$lt"])
+          filter["$and"][index]["startDate"]["$lt"] = new Date(element["startDate"]["$lt"]);
+        }
+      }
       where = [{
           $project: {
             "_id": 0,
@@ -834,6 +915,8 @@ module.exports = function (Trip) {
             "inCity": 1,
             "hasOuterBill": 1,
             "hasInnerBill": 1,
+            "endDate": 1,
+            "startDate": 1,
             "rateId": 1
           }
         }, {
@@ -886,9 +969,6 @@ module.exports = function (Trip) {
         {
           $unwind: "$driver"
         },
-        // {
-        //   $unwind: "$rate"
-        // },
         {
           "$unwind": {
             path: "$rate",
@@ -933,8 +1013,9 @@ module.exports = function (Trip) {
             "inCity": 1,
             "hasOuterBill": 1,
             "hasInnerBill": 1,
+            "endDate": 1,
+            "startDate": 1,
             "rateId": 1
-
           }
         }, {
           $lookup: {
@@ -994,7 +1075,6 @@ module.exports = function (Trip) {
       var cursor = collection.aggregate(where)
       cursor.get(function (err, data) {
         if (err) return callback(err);
-        console.log(data.length)
         return callback(null, data);
       })
     })

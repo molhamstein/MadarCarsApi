@@ -42,6 +42,14 @@
       "required": true,
       "default": 0
     },
+    "startDate": {
+      "type": "date",
+      "required": false
+    },
+    "endDate": {
+      "type": "date",
+      "required": false
+    },
     "pricePerDay": {
       "type": "number",
       "required": true
@@ -209,6 +217,13 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "getTripByFilter"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "solvedTrip"
     },
     {
       "accessType": "EXECUTE",
@@ -385,6 +400,20 @@
       "http": [{
         "path": "/editMethod/:id",
         "verb": "put"
+      }]
+    },
+    "solvedTrip": {
+      "accepts": [],
+      "returns": [{
+        "arg": "data",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/solvedTrip",
+        "verb": "get"
       }]
     }
   }
