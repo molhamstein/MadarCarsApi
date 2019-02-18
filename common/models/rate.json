@@ -6,7 +6,8 @@
     "validateUpsert": true
   },
   "scope": {
-    "include": [{
+    "include": [
+      {
         "relation": "trip"
       },
       {
@@ -55,7 +56,8 @@
       }
     }
   },
-  "acls": [{
+  "acls": [
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -111,49 +113,37 @@
     }
   ],
   "methods": {
-    "getEnd": {
-      "accepts": [{
-        "arg": "limit",
-        "type": "number",
-        "required": true,
-        "description": ""
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/getEnd",
-        "verb": "get"
-      }]
-    },
     "getEndByFilter": {
-      "accepts": [{
-        "arg": "filter",
-        "type": "object",
-        "required": false,
-        "description": "",
-        "http": {
-          "source": "query"
+      "accepts": [
+        {
+          "arg": "filter",
+          "type": "object",
+          "required": false,
+          "description": "",
+          "http": {
+            "source": "query"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/getEndByFilter",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/getEndByFilter",
+          "verb": "get"
+        }
+      ]
     },
     "makeRate": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "carId",
           "type": "string",
           "required": true,
@@ -185,20 +175,25 @@
           }
         }
       ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/makeRate",
-        "verb": "post"
-      }]
+      "http": [
+        {
+          "path": "/makeRate",
+          "verb": "post"
+        }
+      ]
     },
     "updateRate": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "id",
           "type": "string",
           "http": {
@@ -218,20 +213,25 @@
           "description": ""
         }
       ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/:id/updateRate",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/:id/updateRate",
+          "verb": "put"
+        }
+      ]
     },
     "myRate": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "carId",
           "type": "string",
           "required": true,
@@ -247,39 +247,49 @@
           }
         }
       ],
-      "returns": [{
-        "arg": "value",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "value",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/myRate",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/myRate",
+          "verb": "get"
+        }
+      ]
     },
     "getByFilter": {
-      "accepts": [{
-        "arg": "filter",
-        "type": "object",
-        "required": false,
-        "description": "",
-        "http": {
-          "source": "query"
+      "accepts": [
+        {
+          "arg": "filter",
+          "type": "object",
+          "required": false,
+          "description": "",
+          "http": {
+            "source": "query"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "array",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/getByFilter",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/getByFilter",
+          "verb": "get"
+        }
+      ]
     }
   }
 }

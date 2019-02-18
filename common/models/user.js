@@ -387,19 +387,89 @@ module.exports = function (User) {
         console.log("sss")
         console.log(data);
         console.log(mainUser);
-        mainUser.updateAttributes(data, function (err,data) {
+        mainUser.updateAttributes(data, function (err, data) {
           if (err) {
             return callback(err, null)
           }
           console.log(data)
-          return callback(null,data)
+          return callback(null, data)
         })
 
       })
     })
   };
 
+  /**
+   *
+   * @param {date} from
+   * @param {date} to
+   * @param {Function(Error, object)} callback
+   */
 
+  User.genderState = function (from, to, callback) {
+    var filter = {};
+    if (from) {
+      filter['createdAt'] = {
+        '$gt': new Date(from)
+      }
+    }
+    if (to) {
+      if (filter['createdAt'] == null)
+        filter['createdAt'] = {}
+      filter['createdAt']['$lt'] = new Date(to)
+    }
+    User.getDataSource().connector.connect(function (err, db) {
+
+      var collection = db.collection('user');
+      var cursor = collection.aggregate([{
+          $match: filter
+        },
+        {
+          $project: {
+            male: {
+              $cond: [{
+                $eq: ["$gender", "male"]
+              }, 1, 0]
+            },
+            female: {
+              $cond: [{
+                $eq: ["$gender", "female"]
+              }, 1, 0]
+            },
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            male: {
+              $sum: "$male"
+            },
+            female: {
+              $sum: "$female"
+            },
+            total: {
+              $sum: 1
+            },
+          }
+        },
+      ]);
+      cursor.get(function (err, data) {
+        console.log(data);
+        if (err) return callback(err);
+        var malePercent = 0
+        var femalePercent = 0
+        if (data[0] != null && data[0]['male'] != 0 && data[0]['total'] != 0)
+          malePercent = data[0]['male'] * 100 / data[0]['total']
+        if (data[0] != null && data[0]['female'] != 0 && data[0]['total'] != 0)
+          femalePercent = data[0]['female'] * 100 / data[0]['total']
+        var result = {
+          "male": malePercent,
+          "female": femalePercent
+        }
+        return callback(null, result);
+      })
+    });
+  };
 
   User.deactivate = function (id, callback) {
     var code = 200;

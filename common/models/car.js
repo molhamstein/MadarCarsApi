@@ -166,7 +166,7 @@ module.exports = function (Car) {
    * @param {Function(Error, array)} callback
    */
 
-  Car.getAvailable = function (flags, dates, locationId, filter, langFilter, tripId, driverAge, callback) {
+  Car.getAvailable = function (flags, dates, locationId, filter, langFilter, tripId, driverAge, driverGender, callback) {
     if (driverAge == undefined) {
       driverAge = {
         "min": 0,
@@ -183,6 +183,9 @@ module.exports = function (Car) {
     Car.find(filter, function (err, cars) {
       if (err)
         return callback(err, null)
+      if (cars.length == 0)
+        return callback(null, [])
+
       var object = fillDateOfBooking(flags, dates)
       console.log("object.where")
       console.log(JSON.stringify(object.where))
@@ -241,7 +244,7 @@ module.exports = function (Car) {
             element.driver.get(function (err, driver) {
               console.log();
               var driverBirthdate = calculateAge(driver.birthdate)
-              if (driverBirthdate < driverAge.min || driverBirthdate > driverAge.max) {
+              if (driverBirthdate < driverAge.min || driverBirthdate > driverAge.max || (driverGender != undefined && driver.gender != driverGender)) {
                 console.log("push Out")
                 popCarIds.push(element.id);
               }
@@ -254,6 +257,7 @@ module.exports = function (Car) {
                       return i.id == element;
                     }), 1);
                   }, this);
+                console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
                 return callback(null, cars);
               }
             })
@@ -268,7 +272,7 @@ module.exports = function (Car) {
                       return element.landuageId == oneLangFilter;
                     });
                   var driverBirthdate = calculateAge(driver.birthdate)
-                  if (index == undefined || driverBirthdate < driverAge.min || driverBirthdate > driverAge.max) {
+                  if (index == undefined || driverBirthdate < driverAge.min || driverBirthdate > driverAge.max || (driverGender != undefined && driver.gender != driverGender)) {
                     console.log("push Out")
                     popCarIds.push(oneCar.id);
                   }

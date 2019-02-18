@@ -179,62 +179,6 @@
     }
   ],
   "methods": {
-    "getAvailable": {
-      "accepts": [{
-          "arg": "flags",
-          "type": "object",
-          "required": true,
-          "description": ""
-        },
-        {
-          "arg": "dates",
-          "type": "object",
-          "required": true,
-          "description": ""
-        },
-        {
-          "arg": "locationId",
-          "type": "string",
-          "required": true,
-          "description": ""
-        },
-        {
-          "arg": "filter",
-          "type": "object",
-          "required": false,
-          "description": ""
-        },
-        {
-          "arg": "langFilter",
-          "type": "array",
-          "required": false,
-          "description": ""
-        },
-        {
-          "arg": "tripId",
-          "type": "true",
-          "required": false,
-          "description": ""
-        },
-        {
-          "arg": "driverAge",
-          "type": "object",
-          "required": false,
-          "description": ""
-        }
-      ],
-      "returns": [{
-        "arg": "result",
-        "type": "array",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/getAvailable",
-        "verb": "get"
-      }]
-    },
     "deactivate": {
       "accepts": [{
         "arg": "id",
@@ -277,6 +221,68 @@
       "http": [{
         "path": "/activate/:id",
         "verb": "put"
+      }]
+    },
+    "getAvailable": {
+      "accepts": [{
+          "arg": "flags",
+          "type": "object",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "dates",
+          "type": "object",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "locationId",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "filter",
+          "type": "object",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "langFilter",
+          "type": "array",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "tripId",
+          "type": "true",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "driverAge",
+          "type": "object",
+          "required": false,
+          "description": ""
+        },
+        {
+          "arg": "driverGender",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "returns": [{
+        "arg": "result",
+        "type": "array",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/getAvailable",
+        "verb": "get"
       }]
     }
   }
