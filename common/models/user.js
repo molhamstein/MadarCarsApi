@@ -6,6 +6,14 @@ const accountSid = 'AC6df6d08ede1a1f034d74c7ab40f53f96';
 const authToken = '12d6af0846ccee6eb0869aae00527289';
 var twilio = require('twilio');
 var client = new twilio(accountSid, authToken);
+const ejs = require('ejs');
+const path = require('path');
+
+const configPath = process.env.NODE_ENV === undefined ?
+  '../../server/config.json' :
+  `../../server/config.${process.env.NODE_ENV}.json`;
+const config = require(configPath);
+
 
 module.exports = function (User) {
 
@@ -15,6 +23,44 @@ module.exports = function (User) {
   });
 
 
+  function newUser(user) {
+
+    User.app.models.admin.find({
+      "where": {
+        "isSuperAdmin": true
+      }
+    }, function (err, admins) {
+      if (err) {
+        console.log(err);
+        return
+      } else {
+        admins.forEach(element => {
+          console.log(element.email)
+          let url = `${config.domain}` + '/portal/#/edit-user/' + user.id;
+          ejs.renderFile(path.resolve(__dirname + "../../../server/views/new-user-template.ejs"), {
+            url: url
+          }, function (err, html) {
+            if (err) return console.log('> error sending password reset email', err);
+            console.log(html);
+            User.app.models.Email.send({
+              to: element.email,
+              from: 'jawlatcom.info@gmail.com',
+              subject: 'New User In Jawlatcom',
+              html: html
+            }, function (err) {
+              if (err) return console.log('> error sending password reset email', err);
+            });
+          });
+        });
+      }
+    })
+
+  }
+
+  User.afterRemote('create', function (context, user, next) {
+    newUser(user)
+    next();
+  });
 
 
   User.login = function (credentials, include, fn) {
@@ -517,6 +563,8 @@ module.exports = function (User) {
   User.getEnd = function (filter, callback) {
     var limit = filter['limit']
     delete filter['limit']
+    var sort = filter['sort'];
+    delete filter['sort']
     User.count(filter['where'], function (err, count) {
       console.log(count);
       var skip = 0
@@ -534,6 +582,7 @@ module.exports = function (User) {
       User.find({
         "skip": skip,
         "limit": limit,
+        "order": sort + ' DESC',
         "where": filter['where']
       }, function (err, data) {
         callback(null, {

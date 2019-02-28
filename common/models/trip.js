@@ -477,23 +477,30 @@ module.exports = function (Trip) {
   }
 
 
-  Trip.getEnd = function (filter, callback) {
+  Trip.getEndByFilter = function (filter, callback) {
     var limit = 10;
+    var sortKey = "createdAt"
     var where = []
     if (filter && filter['limit'] != null) {
       limit = filter['limit'];
       delete filter['limit']
     }
+    if (filter && filter['sort'] != null) {
+      sortKey = filter['sort']
+      delete filter['sort']
+    }
+
+    var sortObject = "{\"" + sortKey + "\": -1}"
+    console.log("sortObject")
+    console.log(JSON.parse(sortObject))
 
     if (filter != {} && filter != undefined) {
       for (let index = 0; index < filter["$and"].length; index++) {
         const element = filter["$and"][index];
         if (element["endDate"] != null) {
-          console.log(element["endDate"]["$gt"])
           filter["$and"][index]["endDate"]["$gt"] = new Date(element["endDate"]["$gt"]);
         }
         if (element["startDate"] != null) {
-          console.log(element["startDate"]["$lt"])
           filter["$and"][index]["startDate"]["$lt"] = new Date(element["startDate"]["$lt"]);
         }
       }
@@ -578,10 +585,16 @@ module.exports = function (Trip) {
           $unwind: "$driver"
         },
         {
-          $unwind: "$rate"
+          "$unwind": {
+            path: "$rate",
+            preserveNullAndEmptyArrays: true
+          }
         },
         {
           $match: filter
+        },
+        {
+          $sort: JSON.parse(sortObject)
         }
       ]
     } else {
@@ -663,15 +676,22 @@ module.exports = function (Trip) {
         },
         {
           $unwind: "$driver"
+        },
+        {
+          "$unwind": {
+            path: "$rate",
+            preserveNullAndEmptyArrays: true
+          }
         }
       ]
     }
     Trip.getDataSource().connector.connect(function (err, db) {
-      console.log(where);
       var collection = db.collection('trip');
       var cursor = collection.aggregate(where)
       cursor.get(function (err, data) {
         if (err) return callback(err);
+        console.log("data.length");
+        console.log(data.length);
         var skip = 0
         var count = data.length
         if (limit < count) {
@@ -862,9 +882,11 @@ module.exports = function (Trip) {
     })
   }
 
-  Trip.getTripByFilter = function (filter, callback) {
+
+  function getData(filter, isCount, cb) {
     var limit = 10;
     var skip = 0;
+    var sortKey = "createdAt"
     var where = []
     if (filter && filter['limit'] != null) {
       limit = filter['limit'];
@@ -873,10 +895,15 @@ module.exports = function (Trip) {
     if (filter && filter['skip'] != null) {
       skip = filter['skip'];
       delete filter['skip']
-
     }
-    // console.log("filter.length")
-    // console.log(filter)
+    if (filter && filter['sort'] != null) {
+      sortKey = filter['sort']
+      delete filter['sort']
+    }
+
+    var sortObject = "{\"" + sortKey + "\": -1}"
+    console.log("sortObject")
+    console.log(JSON.parse(sortObject))
     if (filter != {} && filter != undefined) {
       for (let index = 0; index < filter["$and"].length; index++) {
         const element = filter["$and"][index];
@@ -889,193 +916,221 @@ module.exports = function (Trip) {
           filter["$and"][index]["startDate"]["$lt"] = new Date(element["startDate"]["$lt"]);
         }
       }
-      where = [{
-          $project: {
-            "_id": 0,
-            "id": "$_id",
-            "createdAt": 1,
-            "value": 1,
-            "carId": 1,
-            "ownerId": 1,
-            "locationId": 1,
-            "driverId": 1,
-            "status": 1,
-            "type": 1,
-            "cost": 1,
-            "pricePerDay": 1,
-            "priceOneWay": 1,
-            "priceTowWay": 1,
-            "daysInCity": 1,
-            "fromAirportDate": 1,
-            "fromAirport": 1,
-            "toAirportDate": 1,
-            "toAirport": 1,
-            "startInCityDate": 1,
-            "endInCityDate": 1,
-            "inCity": 1,
-            "hasOuterBill": 1,
-            "hasInnerBill": 1,
-            "endDate": 1,
-            "startDate": 1,
-            "rateId": 1
+      if (isCount == false) {
+        where = [{
+            $project: {
+              "_id": 0,
+              "id": "$_id",
+              "createdAt": 1,
+              "value": 1,
+              "carId": 1,
+              "ownerId": 1,
+              "locationId": 1,
+              "driverId": 1,
+              "status": 1,
+              "type": 1,
+              "cost": 1,
+              "pricePerDay": 1,
+              "priceOneWay": 1,
+              "priceTowWay": 1,
+              "daysInCity": 1,
+              "fromAirportDate": 1,
+              "fromAirport": 1,
+              "toAirportDate": 1,
+              "toAirport": 1,
+              "startInCityDate": 1,
+              "endInCityDate": 1,
+              "inCity": 1,
+              "hasOuterBill": 1,
+              "hasInnerBill": 1,
+              "endDate": 1,
+              "startDate": 1,
+              "rateId": 1,
+            }
+          }, {
+            $lookup: {
+              from: "car",
+              localField: "carId",
+              foreignField: "_id",
+              as: "car"
+            }
+          }, {
+            $lookup: {
+              from: "driver",
+              localField: "driverId",
+              foreignField: "_id",
+              as: "driver"
+            }
+          }, {
+            $lookup: {
+              from: "location",
+              localField: "locationId",
+              foreignField: "_id",
+              as: "location"
+            }
+          },
+          {
+            $lookup: {
+              from: "user",
+              localField: "ownerId",
+              foreignField: "_id",
+              as: "owner"
+            }
+          },
+          {
+            $lookup: {
+              from: "rate",
+              localField: "rateId",
+              foreignField: "_id",
+              as: "rate"
+            }
+          },
+          {
+            $unwind: "$owner"
+          },
+          {
+            $unwind: "$car"
+          },
+          {
+            $unwind: "$location"
+          },
+          {
+            $unwind: "$driver"
+          },
+          {
+            "$unwind": {
+              path: "$rate",
+              preserveNullAndEmptyArrays: true
+            }
+          }, {
+            $match: filter
+          },
+          {
+            $sort: JSON.parse(sortObject)
+          },
+          {
+            "$skip": skip
+          }, {
+            "$limit": limit
           }
-        }, {
-          $lookup: {
-            from: "car",
-            localField: "carId",
-            foreignField: "_id",
-            as: "car"
+        ]
+        console.log(where);
+      } else
+        where = [{
+            $project: {
+              "_id": 0,
+              "id": "$_id",
+              "createdAt": 1,
+              "value": 1,
+              "carId": 1,
+              "ownerId": 1,
+              "locationId": 1,
+              "driverId": 1,
+              "status": 1,
+              "type": 1,
+              "cost": 1,
+              "pricePerDay": 1,
+              "priceOneWay": 1,
+              "priceTowWay": 1,
+              "daysInCity": 1,
+              "fromAirportDate": 1,
+              "fromAirport": 1,
+              "toAirportDate": 1,
+              "toAirport": 1,
+              "startInCityDate": 1,
+              "endInCityDate": 1,
+              "inCity": 1,
+              "hasOuterBill": 1,
+              "hasInnerBill": 1,
+              "endDate": 1,
+              "startDate": 1,
+              "rateId": 1,
+            }
+          }, {
+            $lookup: {
+              from: "car",
+              localField: "carId",
+              foreignField: "_id",
+              as: "car"
+            }
+          }, {
+            $lookup: {
+              from: "driver",
+              localField: "driverId",
+              foreignField: "_id",
+              as: "driver"
+            }
+          }, {
+            $lookup: {
+              from: "location",
+              localField: "locationId",
+              foreignField: "_id",
+              as: "location"
+            }
+          },
+          {
+            $lookup: {
+              from: "user",
+              localField: "ownerId",
+              foreignField: "_id",
+              as: "owner"
+            }
+          },
+          {
+            $lookup: {
+              from: "rate",
+              localField: "rateId",
+              foreignField: "_id",
+              as: "rate"
+            }
+          },
+          {
+            $unwind: "$owner"
+          },
+          {
+            $unwind: "$car"
+          },
+          {
+            $unwind: "$location"
+          },
+          {
+            $unwind: "$driver"
+          },
+          {
+            "$unwind": {
+              path: "$rate",
+              preserveNullAndEmptyArrays: true
+            }
+          }, {
+            $match: filter
+          },
+          {
+            $count: "count"
           }
-        }, {
-          $lookup: {
-            from: "driver",
-            localField: "driverId",
-            foreignField: "_id",
-            as: "driver"
-          }
-        }, {
-          $lookup: {
-            from: "location",
-            localField: "locationId",
-            foreignField: "_id",
-            as: "location"
-          }
-        },
-        {
-          $lookup: {
-            from: "user",
-            localField: "ownerId",
-            foreignField: "_id",
-            as: "owner"
-          }
-        },
-        {
-          $lookup: {
-            from: "rate",
-            localField: "rateId",
-            foreignField: "_id",
-            as: "rate"
-          }
-        },
-        {
-          $unwind: "$owner"
-        },
-        {
-          $unwind: "$car"
-        },
-        {
-          $unwind: "$location"
-        },
-        {
-          $unwind: "$driver"
-        },
-        {
-          "$unwind": {
-            path: "$rate",
-            preserveNullAndEmptyArrays: true
-          }
-        }, {
-          $match: filter
-        }, {
-          "$skip": skip
-        }, {
-          "$limit": limit
-        }
-      ]
-    } else {
-      where = [{
-          "$limit": limit
-        }, {
-          "$skip": skip
-        }, {
-          $project: {
-            "_id": 0,
-            "id": "$_id",
-            "createdAt": 1,
-            "value": 1,
-            "carId": 1,
-            "ownerId": 1,
-            "locationId": 1,
-            "driverId": 1,
-            "status": 1,
-            "type": 1,
-            "cost": 1,
-            "pricePerDay": 1,
-            "priceOneWay": 1,
-            "priceTowWay": 1,
-            "daysInCity": 1,
-            "fromAirportDate": 1,
-            "fromAirport": 1,
-            "toAirportDate": 1,
-            "toAirport": 1,
-            "startInCityDate": 1,
-            "endInCityDate": 1,
-            "inCity": 1,
-            "hasOuterBill": 1,
-            "hasInnerBill": 1,
-            "endDate": 1,
-            "startDate": 1,
-            "rateId": 1
-          }
-        }, {
-          $lookup: {
-            from: "car",
-            localField: "carId",
-            foreignField: "_id",
-            as: "car"
-          }
-        }, {
-          $lookup: {
-            from: "driver",
-            localField: "driverId",
-            foreignField: "_id",
-            as: "driver"
-          }
-        }, {
-          $lookup: {
-            from: "location",
-            localField: "locationId",
-            foreignField: "_id",
-            as: "location"
-          }
-        },
-        {
-          $lookup: {
-            from: "user",
-            localField: "ownerId",
-            foreignField: "_id",
-            as: "owner"
-          }
-        },
-        {
-          $lookup: {
-            from: "rate",
-            localField: "rateId",
-            foreignField: "_id",
-            as: "rate"
-          }
-        },
-        {
-          $unwind: "$owner"
-        },
-        {
-          $unwind: "$car"
-        },
-        {
-          $unwind: "$location"
-        },
-        {
-          $unwind: "$driver"
-        }
-      ]
+        ]
     }
     Trip.getDataSource().connector.connect(function (err, db) {
-      console.log(where);
       var collection = db.collection('trip');
       var cursor = collection.aggregate(where)
       cursor.get(function (err, data) {
-        if (err) return callback(err);
-        return callback(null, data);
+        if (err) return cb(err);
+        return cb(null, data);
+      })
+    })
+  }
+
+  Trip.getTripByFilter = function (filter, callback) {
+    getData(filter, false, function (err, data) {
+      if (err)
+        return callback(err, null)
+      getData(filter, true, function (err, count) {
+        if (err)
+          return callback(err, null)
+
+        callback(err, {
+          "data": data,
+          "count": count[0].count
+        });
       })
     })
   };

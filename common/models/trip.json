@@ -211,7 +211,7 @@
       "principalType": "ROLE",
       "principalId": "admin",
       "permission": "ALLOW",
-      "property": "getEnd"
+      "property": "getEndByFilter"
     },
     {
       "accessType": "EXECUTE",
@@ -426,6 +426,34 @@
       "http": [
         {
           "path": "/solvedTrip",
+          "verb": "get"
+        }
+      ]
+    },
+    "getEndByFilter": {
+      "accepts": [
+        {
+          "arg": "filter",
+          "type": "object",
+          "required": false,
+          "description": "",
+          "http": {
+            "source": "query"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/getEndByFilter",
           "verb": "get"
         }
       ]

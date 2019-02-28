@@ -106,7 +106,8 @@ module.exports = function (Rate) {
    * @param {Function(Error, array)} callback
    */
 
-  Rate.getByFilter = function (filter, callback) {
+
+  function getData(filter, isCount, cb) {
     var limit = 10;
     var skip = 0;
     var where = []
@@ -122,116 +123,137 @@ module.exports = function (Rate) {
     console.log("filter.length")
     console.log(filter)
     if (filter != {} && filter != undefined) {
-      where = [{
-          $project: {
-            "_id": 0,
-            "id": "$_id",
-            "createdAt": 1,
-            "value": 1,
-            "carId": 1,
-            "tripId": 1,
-            "ownerId": 1,
+      if (isCount == false)
+        where = [{
+            $project: {
+              "_id": 0,
+              "id": "$_id",
+              "createdAt": 1,
+              "value": 1,
+              "carId": 1,
+              "tripId": 1,
+              "ownerId": 1,
+            }
+          }, {
+            $lookup: {
+              from: "car",
+              localField: "carId",
+              foreignField: "_id",
+              as: "car"
+            }
+          }, {
+            $lookup: {
+              from: "trip",
+              localField: "tripId",
+              foreignField: "_id",
+              as: "trip"
+            }
+          },
+          {
+            $lookup: {
+              from: "user",
+              localField: "ownerId",
+              foreignField: "_id",
+              as: "user"
+            }
+          },
+          {
+            $unwind: "$user"
+          },
+          {
+            $unwind: "$car"
+          },
+          {
+            $unwind: "$trip"
+          },
+          {
+            $match: filter
+          }, {
+            "$skip": skip
+          }, {
+            "$limit": limit
           }
-        }, {
-          $lookup: {
-            from: "car",
-            localField: "carId",
-            foreignField: "_id",
-            as: "car"
+        ]
+      else
+        where = [{
+            $project: {
+              "_id": 0,
+              "id": "$_id",
+              "createdAt": 1,
+              "value": 1,
+              "carId": 1,
+              "tripId": 1,
+              "ownerId": 1,
+            }
+          }, {
+            $lookup: {
+              from: "car",
+              localField: "carId",
+              foreignField: "_id",
+              as: "car"
+            }
+          }, {
+            $lookup: {
+              from: "trip",
+              localField: "tripId",
+              foreignField: "_id",
+              as: "trip"
+            }
+          },
+          {
+            $lookup: {
+              from: "user",
+              localField: "ownerId",
+              foreignField: "_id",
+              as: "user"
+            }
+          },
+          {
+            $unwind: "$user"
+          },
+          {
+            $unwind: "$car"
+          },
+          {
+            $unwind: "$trip"
+          },
+          {
+            $match: filter
+          },
+          {
+            $count: "count"
           }
-        }, {
-          $lookup: {
-            from: "trip",
-            localField: "tripId",
-            foreignField: "_id",
-            as: "trip"
-          }
-        },
-        {
-          $lookup: {
-            from: "user",
-            localField: "ownerId",
-            foreignField: "_id",
-            as: "user"
-          }
-        },
-        {
-          $unwind: "$user"
-        },
-        {
-          $unwind: "$car"
-        },
-        {
-          $unwind: "$trip"
-        },
-        {
-          $match: filter
-        }, {
-          "$skip": skip
-        }, {
-          "$limit": limit
-        }
-      ]
-    } else {
-      where = [{
-          "$limit": limit
-        }, {
-          "$skip": skip
-        }, {
-          $project: {
-            "_id": 0,
-            "id": "$_id",
-            "createdAt": 1,
-            "value": 1,
-            "carId": 1,
-            "tripId": 1,
-            "ownerId": 1,
-          }
-        }, {
-          $lookup: {
-            from: "car",
-            localField: "carId",
-            foreignField: "_id",
-            as: "car"
-          }
-        }, {
-          $lookup: {
-            from: "trip",
-            localField: "tripId",
-            foreignField: "_id",
-            as: "trip"
-          }
-        },
-        {
-          $lookup: {
-            from: "user",
-            localField: "ownerId",
-            foreignField: "_id",
-            as: "user"
-          }
-        },
-        {
-          $unwind: "$user"
-        },
-        {
-          $unwind: "$car"
-        },
-        {
-          $unwind: "$trip"
-        }
-      ]
+        ]
     }
     Rate.getDataSource().connector.connect(function (err, db) {
       console.log(where);
       var collection = db.collection('rate');
       var cursor = collection.aggregate(where)
       cursor.get(function (err, data) {
-        if (err) return callback(err);
+        if (err) return cb(err);
         console.log(data.length)
-        return callback(null, data);
+        return cb(null, data);
+      })
+    })
+
+  }
+
+  Rate.getByFilter = function (filter, callback) {
+    getData(filter, false, function (err, data) {
+      if (err)
+        return callback(err, null)
+      getData(filter, true, function (err, count) {
+        if (err)
+          return callback(err, null)
+
+        callback(err, {
+          "data": data,
+          "count": count[0].count
+        });
       })
     })
   };
+
 
 
   Rate.getEndByFilter = function (filter, callback) {
@@ -305,7 +327,7 @@ module.exports = function (Rate) {
         }
       ]
     } else {
-      where = [ {
+      where = [{
           $project: {
             "_id": 0,
             "id": "$_id",
