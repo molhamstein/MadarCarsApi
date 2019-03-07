@@ -1,0 +1,90 @@
+{
+  "name": "coupon",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "code": {
+      "type": "string",
+      "required": true
+    },
+    "from": {
+      "type": "date",
+      "required": true
+    },
+    "to": {
+      "type": "date",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "default": "active"
+    },
+    "numberOfUses": {
+      "type": "number",
+      "required": true
+    },
+    "numberOfUsed": {
+      "type": "number",
+      "required": true
+    },
+    "value": {
+      "type": "number",
+      "required": true
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "createdAt": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "travelAgency": {
+      "type": "belongsTo",
+      "model": "travelAgency",
+      "foreignKey": "travelAgencyId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {
+    "checkCoupon": {
+      "accepts": [
+        {
+          "arg": "code",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/:code/checkCoupon",
+          "verb": "get"
+        }
+      ]
+    }
+  }
+}

@@ -29,6 +29,14 @@
       "options": {
         "nestRemoting": true
       }
+    },
+    "travelAgency": {
+      "type": "belongsTo",
+      "model": "travelAgency",
+      "foreignKey": "travelAgencyId",
+      "options": {
+        "nestRemoting": true
+      }
     }
   },
   "acls": [],

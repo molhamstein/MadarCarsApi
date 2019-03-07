@@ -179,50 +179,6 @@
     }
   ],
   "methods": {
-    "deactivate": {
-      "accepts": [{
-        "arg": "id",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
-        }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/deactivate/:id",
-        "verb": "delete"
-      }]
-    },
-    "activate": {
-      "accepts": [{
-        "arg": "id",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
-        }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/activate/:id",
-        "verb": "put"
-      }]
-    },
     "getAvailable": {
       "accepts": [{
           "arg": "flags",
@@ -283,6 +239,50 @@
       "http": [{
         "path": "/getAvailable",
         "verb": "get"
+      }]
+    },
+    "deactivate": {
+      "accepts": [{
+        "arg": "id",
+        "type": "string",
+        "required": true,
+        "description": "",
+        "http": {
+          "source": "path"
+        }
+      }],
+      "returns": [{
+        "arg": "code",
+        "type": "number",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/deactivate/:id",
+        "verb": "delete"
+      }]
+    },
+    "activate": {
+      "accepts": [{
+        "arg": "id",
+        "type": "string",
+        "required": true,
+        "description": "",
+        "http": {
+          "source": "path"
+        }
+      }],
+      "returns": [{
+        "arg": "code",
+        "type": "number",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/activate/:id",
+        "verb": "put"
       }]
     }
   }

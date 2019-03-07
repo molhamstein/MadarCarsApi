@@ -178,5 +178,13 @@
   "agency": {
     "dataSource": "madarDB",
     "public": true
+  },
+  "travelAgency": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "coupon": {
+    "dataSource": "madarDB",
+    "public": true
   }
 }

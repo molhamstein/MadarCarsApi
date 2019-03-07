@@ -48,6 +48,17 @@ module.exports.trip = {
 };
 
 
+module.exports.coupon = {
+
+  couponIsUsed: function () {
+    return new cError(461, 'coupon is used', 461);
+  },
+  couponIsNotValid: function () {
+    return new cError(462, 'coupon is not valid', 462);
+  }
+
+};
+
 module.exports.car = {
 
   carNotFound: function () {
@@ -56,5 +67,5 @@ module.exports.car = {
   carNotAvailable: function () {
     return new cError(457, 'car not available', 457);
   }
-  
+
 };

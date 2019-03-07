@@ -15,7 +15,6 @@ module.exports = function (Trip) {
 
   Trip.beforeRemote('create', function (context, result, next) {
     var data = context.req.body;
-
     if (context.req.body.ownerId == null)
       context.req.body.ownerId = context.req.accessToken.userId;
 
@@ -32,8 +31,32 @@ module.exports = function (Trip) {
         if (err)
           return next(err)
         console.log("Done");
-        next();
-
+        if (data['couponId'] == undefined)
+          next();
+        else {
+          Trip.app.models.coupon.find({
+            "where": {
+              "id": data['couponId'],
+              "status": "active",
+              "from": {
+                lt: new Date()
+              },
+              "to": {
+                gt: new Date()
+              }
+            }
+          }, function (err, oneCoupon) {
+            if (err)
+              return next(err)
+            if (oneCoupon.length == 0)
+              return next(errors.coupon.couponIsNotValid());
+            oneCoupon[0].numberOfUsed++;
+            if (oneCoupon[0].numberOfUsed == oneCoupon[0].numberOfUses)
+              oneCoupon[0].status = "used"
+            oneCoupon[0].save()
+            next()
+          })
+        }
       })
     })
   })
@@ -946,6 +969,22 @@ module.exports = function (Trip) {
               "endDate": 1,
               "startDate": 1,
               "rateId": 1,
+              "couponId": 1,
+              "travelAgencyId": 1,
+            }
+          }, {
+            $lookup: {
+              from: "coupon",
+              localField: "couponId",
+              foreignField: "_id",
+              as: "coupon"
+            }
+          }, {
+            $lookup: {
+              from: "travelAgency",
+              localField: "travelAgencyId",
+              foreignField: "_id",
+              as: "travelAgency"
             }
           }, {
             $lookup: {
@@ -996,6 +1035,18 @@ module.exports = function (Trip) {
           },
           {
             $unwind: "$driver"
+          },
+          {
+            "$unwind": {
+              path: "$travelAgency",
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            "$unwind": {
+              path: "$coupon",
+              preserveNullAndEmptyArrays: true
+            }
           },
           {
             "$unwind": {
@@ -1135,6 +1186,125 @@ module.exports = function (Trip) {
     })
   };
 
+
+  /**
+   *
+   * @param {string} tripId
+   * @param {string} couponId
+   * @param {Function(Error, number)} callback
+   */
+
+  Trip.editTripCoupon = function (tripId, couponId, callback) {
+    var code = 200;
+    Trip.findById(tripId, function (err, trip) {
+      if (err)
+        return callback(err)
+      var mainCouponId = trip.couponId;
+      console.log(trip);
+      console.log("mainCouponId");
+      console.log(mainCouponId);
+      console.log("couponId");
+      console.log(couponId);
+      if (mainCouponId == couponId) {
+        console.log("no thing")
+        return callback();
+      } else if (mainCouponId == undefined && couponId != undefined) {
+        console.log("new Coupon")
+        Trip.app.models.coupon.find({
+          "where": {
+            "id": couponId,
+            "status": "active",
+            "from": {
+              lt: new Date()
+            },
+            "to": {
+              gt: new Date()
+            }
+          },
+        }, function (err, oneCoupon) {
+          if (err)
+            return callback(err)
+          if (oneCoupon.length == 0)
+            return callback(errors.coupon.couponIsNotValid());
+          oneCoupon[0].numberOfUsed++;
+          if (oneCoupon[0].numberOfUsed == oneCoupon[0].numberOfUses)
+            oneCoupon[0].status = "used"
+          oneCoupon[0].save()
+          var newCost = 0;
+          if (oneCoupon[0].type == "fixed")
+            newCost = trip.costBeforCoupon - oneCoupon[0].value;
+          else if (oneCoupon[0].type == "percentage")
+            newCost = trip.costBeforCoupon - (trip.costBeforCoupon * oneCoupon[0].value / 100)
+          trip.updateAttributes({
+            "cost": newCost,
+            "travelAgencyId": oneCoupon[0].travelAgencyId,
+            "couponId": couponId
+          })
+          return callback()
+        })
+
+      } else if (mainCouponId != undefined && couponId == undefined) {
+        console.log("delete Coupon")
+        Trip.app.models.coupon.findById(mainCouponId, function (err, coupon) {
+          if (err)
+            return callback(err)
+          coupon.numberOfUsed--;
+          if (coupon.status == "used")
+            coupon.status = "active"
+          coupon.save();
+          var newCost = trip.costBeforCoupon
+          trip.updateAttributes({
+            "cost": newCost,
+            "travelAgencyId": null,
+            "couponId": null
+          })
+          return callback()
+        })
+      } else {
+        console.log("change Coupon")
+        Trip.app.models.coupon.findById(mainCouponId, function (err, coupon) {
+          if (err)
+            return callback(err)
+          coupon.numberOfUsed--;
+          if (coupon.status == "used")
+            coupon.status = "active"
+          coupon.save();
+          Trip.app.models.coupon.find({
+            "where": {
+              "id": couponId,
+              "status": "active",
+              "from": {
+                lt: new Date()
+              },
+              "to": {
+                gt: new Date()
+              }
+            },
+          }, function (err, oneCoupon) {
+            if (err)
+              return callback(err)
+            if (oneCoupon.length == 0)
+              return callback(errors.coupon.couponIsNotValid());
+            oneCoupon[0].numberOfUsed++;
+            if (oneCoupon[0].numberOfUsed == oneCoupon[0].numberOfUses)
+              oneCoupon[0].status = "used"
+            oneCoupon[0].save()
+            var newCost = 0;
+            if (oneCoupon[0].type == "fixed")
+              newCost = trip.costBeforCoupon - oneCoupon[0].value;
+            else if (oneCoupon[0].type == "percentage")
+              newCost = trip.costBeforCoupon - (trip.costBeforCoupon * oneCoupon[0].value / 100)
+            trip.updateAttributes({
+              "cost": newCost,
+              "travelAgencyId": oneCoupon[0].travelAgencyId,
+              "couponId": couponId
+            })
+            return callback()
+          })
+        })
+      }
+    })
+  };
 
 
 };

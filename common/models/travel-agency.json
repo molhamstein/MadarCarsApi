@@ -1,6 +1,7 @@
 {
-  "name": "agency",
+  "name": "travelAgency",
   "base": "User",
+  "idInjection": true,
   "options": {
     "validateUpsert": true,
     "ttl": 31536000000

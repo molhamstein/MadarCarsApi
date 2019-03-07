@@ -113,34 +113,6 @@
     }
   ],
   "methods": {
-    "getEndByFilter": {
-      "accepts": [
-        {
-          "arg": "filter",
-          "type": "object",
-          "required": false,
-          "description": "",
-          "http": {
-            "source": "query"
-          }
-        }
-      ],
-      "returns": [
-        {
-          "arg": "result",
-          "type": "object",
-          "root": true,
-          "description": ""
-        }
-      ],
-      "description": "",
-      "http": [
-        {
-          "path": "/getEndByFilter",
-          "verb": "get"
-        }
-      ]
-    },
     "makeRate": {
       "accepts": [
         {

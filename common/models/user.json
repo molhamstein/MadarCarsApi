@@ -161,6 +161,37 @@
     }
   ],
   "methods": {
+    "resetPassword": {
+      "accepts": [
+        {
+          "arg": "userId",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "newPassword",
+          "type": "string",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/resetPassword",
+          "verb": "put"
+        }
+      ]
+    },
     "deactivate": {
       "accepts": [
         {
@@ -239,37 +270,6 @@
         {
           "path": "/getEnd",
           "verb": "get"
-        }
-      ]
-    },
-    "resetPassword": {
-      "accepts": [
-        {
-          "arg": "userId",
-          "type": "string",
-          "required": true,
-          "description": ""
-        },
-        {
-          "arg": "newPassword",
-          "type": "string",
-          "required": true,
-          "description": ""
-        }
-      ],
-      "returns": [
-        {
-          "arg": "code",
-          "type": "number",
-          "root": true,
-          "description": ""
-        }
-      ],
-      "description": "",
-      "http": [
-        {
-          "path": "/resetPassword",
-          "verb": "put"
         }
       ]
     },

@@ -239,6 +239,8 @@ module.exports = function (Car) {
         var popCarIds = [];
         if (langFilter == undefined) {
           console.log("cars")
+          if (cars.length == 0)
+            return callback(null, cars);
           for (let index = 0; index < cars.length; index++) {
             const element = cars[index];
             element.driver.get(function (err, driver) {
