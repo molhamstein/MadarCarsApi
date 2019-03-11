@@ -27,6 +27,11 @@ module.exports = function (Car) {
       oneSublocation.carId = result.id;
     })
 
+    _.each(context.req.body.carsAirport, oneCarsAirport => {
+      oneCarsAirport.carId = result.id;
+      delete oneCarsAirport.name
+    })
+
     console.log(context.req.body.carMedia)
     Car.app.models.carMedia.create(context.req.body.carMedia, function (err, data) {
       if (err)
@@ -34,7 +39,11 @@ module.exports = function (Car) {
       Car.app.models.carSublocation.create(context.req.body.carSublocations, function (err, data) {
         if (err)
           return next(err);
-        next()
+        Car.app.models.carsAirport.create(context.req.body.carsAirport, function (err, data) {
+          if (err)
+            return next(err);
+          next()
+        })
       })
 
     })
@@ -46,6 +55,23 @@ module.exports = function (Car) {
     if (context.where == null)
       next()
     else {
+      if (context.data.carsAirport != undefined) {
+        var carId = context.where.id
+        Car.app.models.carsAirport.destroyAll({
+          "carId": carId
+        }, function (err, data) {
+          if (err)
+            return next(err);
+          _.each(context.data.carsAirport, oneSlide => {
+            oneSlide.carId = context.where.id;
+            delete oneSlide.name
+          })
+          Car.app.models.carsAirport.create(context.data.carsAirport, function (err, data) {
+            if (err)
+              return next(err);
+          })
+        })
+      }
       if (context.data.carMedia != undefined) {
         var carId = context.where.id
         Car.app.models.carMedia.destroyAll({

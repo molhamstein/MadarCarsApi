@@ -1,5 +1,5 @@
 {
-  "name": "subLocation",
+  "name": "airport",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -26,38 +26,25 @@
       "required": true
     },
     "nameTr": {
-      "type": "string",
-      "required": false
+      "type": "string"
     },
     "status": {
       "type": "string",
-      "default": "active"
-    },
-    "color1": {
-      "type": "string",
-      "required": true
-    },
-    "color2": {
-      "type": "string",
-      "required": true
-    },
-    "createdAt": {
-      "type": "date",
       "required": true,
-      "defaultFn": "now"
+      "default": "active"
     }
   },
   "validations": [],
   "relations": {
-    "location": {
-      "type": "belongsTo",
-      "model": "location",
-      "foreignKey": "locationId"
-    },
     "media": {
       "type": "belongsTo",
       "model": "media",
       "foreignKey": "mediaId"
+    },
+    "location": {
+      "type": "belongsTo",
+      "model": "location",
+      "foreignKey": "locationId"
     }
   },
   "acls": [

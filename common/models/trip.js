@@ -879,6 +879,7 @@ module.exports = function (Trip) {
     Data['priceOneWay'] = data['priceOneWay'];
     Data['priceTowWay'] = data['priceTowWay'];
     Data['carId'] = data['carId'];
+    Data['costBeforCoupon'] = data['costBeforCoupon'];
     Data['cost'] = data['cost'];
     Data['daysInCity'] = data['daysInCity'];
     Data['type'] = data['type'];
@@ -1177,10 +1178,9 @@ module.exports = function (Trip) {
       getData(filter, true, function (err, count) {
         if (err)
           return callback(err, null)
-
         callback(err, {
           "data": data,
-          "count": count[0].count
+          "count": count[0] != null ? count[0].count : 0
         });
       })
     })

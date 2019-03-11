@@ -1,0 +1,46 @@
+{
+  "name": "carsAirport",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "scope": {
+    "include": [
+      {
+        "relation": "airport"
+      }
+    ]
+  },
+  "properties": {
+    "priceOneWay": {
+      "type": "number",
+      "required": true
+    },
+    "priceTowWay": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "car": {
+      "type": "belongsTo",
+      "model": "car",
+      "foreignKey": "carId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "airport": {
+      "type": "belongsTo",
+      "model": "airport",
+      "foreignKey": "airportId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

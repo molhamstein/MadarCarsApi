@@ -186,5 +186,13 @@
   "coupon": {
     "dataSource": "madarDB",
     "public": true
+  },
+  "airport": {
+    "dataSource": "madarDB",
+    "public": true
+  },
+  "carsAirport": {
+    "dataSource": "madarDB",
+    "public": true
   }
 }

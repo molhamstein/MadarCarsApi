@@ -43,8 +43,7 @@
   ],
   "methods": {
     "resetPassword": {
-      "accepts": [
-        {
+      "accepts": [{
           "arg": "userId",
           "type": "string",
           "required": true,
@@ -57,21 +56,18 @@
           "description": ""
         }
       ],
-      "returns": [
-        {
-          "arg": "code",
-          "type": "number",
-          "root": true,
-          "description": ""
-        }
-      ],
+      "returns": [{
+        "arg": "code",
+        "type": "number",
+        "root": true,
+        "description": ""
+      }],
       "description": "",
-      "http": [
-        {
-          "path": "/resetPassword",
-          "verb": "put"
-        }
-      ]
+      "http": [{
+        "path": "/resetPassword",
+        "verb": "put"
+      }]
     }
+
   }
 }

@@ -248,7 +248,7 @@ module.exports = function (Rate) {
 
         callback(err, {
           "data": data,
-          "count": count[0].count
+          "count": count[0] != null ? count[0].count : 0
         });
       })
     })

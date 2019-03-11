@@ -536,6 +536,30 @@ module.exports = function (User) {
   };
 
 
+  /**
+   *
+   * @param {string} phoneNumber
+   * @param {Function(Error, boolean)} callback
+   */
+
+  User.checkUser = function (phoneNumber, callback) {
+    User.find({
+      "where": {
+        "phoneNumber": phoneNumber
+      }
+    }, function (err, data) {
+      if (err) {
+        return callback(err, null)
+      }
+      if (data.length == 0) {
+        return callback(err, false)
+      } else
+        return callback(err, true)
+
+
+    })
+  };
+
   User.activate = function (id, callback) {
     var code = 200;
     // TODO
