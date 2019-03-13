@@ -4,7 +4,8 @@ const errors = require('../../server/errors');
 
 module.exports = function (Location) {
 
-  Location.validatesInclusionOf('status', { in: ['active', 'deactive']
+  Location.validatesInclusionOf('status', {
+    in: ['active', 'deactive']
   });
 
   Location.afterRemote('create', function (context, result, next) {
@@ -91,5 +92,37 @@ module.exports = function (Location) {
 
     })
   };
+
+  Location.homeStatus = function (callback) {
+    Location.count({
+      "status": "active"
+    }, function (err, countLocation) {
+      if (err)
+        callback(err);
+      Location.app.models.car.count({
+        "status": "active"
+      }, function (err, countCars) {
+        if (err)
+          callback(err);
+        Location.app.models.trip.count({}, function (err, countTrip) {
+          if (err)
+            callback(err);
+          Location.app.models.driver.count({
+            "status": "active"
+          }, function (err, countDriver) {
+            if (err)
+              callback(err);
+            callback(err, {
+              "cars": countCars,
+              "locations": countLocation,
+              "trips": countTrip,
+              "drivers": countDriver
+            });
+          })
+        })
+
+      })
+    })
+  }
 
 };

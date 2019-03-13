@@ -7,8 +7,7 @@
   },
   "replaceOnPUT": false,
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "media"
       },
       {
@@ -85,8 +84,7 @@
       "through": "locationMedia"
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -117,6 +115,19 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "activate"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "homeStatus"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "ALLOW"
     }
   ],
   "methods": {
@@ -162,6 +173,20 @@
       "http": [{
         "path": "/activate/:id",
         "verb": "put"
+      }]
+    },
+    "homeStatus": {
+      "accepts": [],
+      "returns": [{
+        "arg": "object",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/homeStatus",
+        "verb": "get"
       }]
     }
   }
