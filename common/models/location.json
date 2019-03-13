@@ -74,6 +74,11 @@
       "model": "subLocation",
       "foreignKey": "locationId"
     },
+    "airports": {
+      "type": "hasMany",
+      "model": "airport",
+      "foreignKey": "locationId"
+    },
     "slideMedia": {
       "type": "hasMany",
       "model": "media",
