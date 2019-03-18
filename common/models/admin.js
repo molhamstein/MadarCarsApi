@@ -6,7 +6,8 @@ const ejs = require('ejs');
 
 module.exports = function (Admin) {
 
-  Admin.validatesInclusionOf('status', { in: ['active', 'deactive']
+  Admin.validatesInclusionOf('status', {
+    in: ['active', 'deactive']
   });
 
 
@@ -55,7 +56,7 @@ module.exports = function (Admin) {
         return callback(err, null)
       if (userData == null)
         return callback(errors.user.userNotFound());
-        userData.updateAttributes({
+      userData.updateAttributes({
         'password': Admin.hashPassword(newPassword),
       }, function (err) {
         if (err) {
@@ -66,5 +67,10 @@ module.exports = function (Admin) {
     })
   };
 
+  Admin.getMetaData = function (callback) {
+    callback(null,{
+      "contactUsNumber":"905306514431"
+    })
+  };
 
 };

@@ -20,4 +20,13 @@ module.exports = function (Travelagency) {
     })
   };
 
+  Travelagency.me = function (context, callback) {
+    var userId = context.req.accessToken.userId
+    Travelagency.findById(userId, function (err, data) {
+      if (err)
+        return callback(err)
+      return callback(err, data)
+    })
+  };
+
 };

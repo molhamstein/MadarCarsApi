@@ -14,8 +14,7 @@
     "realm"
   ],
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "country"
       },
       {
@@ -67,8 +66,7 @@
       }
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "admin",
@@ -80,6 +78,13 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "resetPassword"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "me"
     }
   ],
   "methods": {
@@ -107,6 +112,28 @@
       "http": [{
         "path": "/resetPassword",
         "verb": "put"
+      }]
+    },
+    "me": {
+      "accepts": [{
+        "arg": "context",
+        "type": "object",
+        "required": true,
+        "description": "",
+        "http": {
+          "source": "context"
+        }
+      }],
+      "returns": [{
+        "arg": "result",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/me",
+        "verb": "get"
       }]
     }
 

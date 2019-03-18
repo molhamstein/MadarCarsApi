@@ -39,7 +39,15 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "resetPassword"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "ALLOW",
+      "property": "getMetaData"
     }
+    
   ],
   "methods": {
     "resetPassword": {
@@ -67,7 +75,23 @@
         "path": "/resetPassword",
         "verb": "put"
       }]
+    },
+    "getMetaData": {
+      "accepts": [
+      ],
+      "returns": [{
+        "arg": "result",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
+      "description": "",
+      "http": [{
+        "path": "/getMetaData",
+        "verb": "get"
+      }]
     }
+
 
   }
 }
