@@ -7,8 +7,7 @@
   },
   "replaceOnPUT": false,
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "media"
       },
       {
@@ -98,8 +97,7 @@
       }
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -130,7 +128,14 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "ALLOW"
     }
+
   ],
   "methods": {
     "deactivate": {

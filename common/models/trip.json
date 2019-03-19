@@ -226,12 +226,6 @@
       "permission": "ALLOW"
     },
     {
-      "accessType": "READ",
-      "principalType": "ROLE",
-      "principalId": "$unauthenticated",
-      "permission": "ALLOW"
-    },
-    {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$authenticated",
