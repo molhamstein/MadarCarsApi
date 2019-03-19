@@ -269,73 +269,72 @@ module.exports = function (Car) {
             return callback(null, cars);
           for (let index = 0; index < cars.length; index++) {
             const element = cars[index];
-            element.driver.get(function (err, driver) {
-              console.log();
-              var driverBirthdate = calculateAge(driver.birthdate)
-              if (driverBirthdate < driverAge.min || driverBirthdate > driverAge.max || (driverGender != undefined && driver.gender != driverGender)) {
-                console.log("push Out")
-                popCarIds.push(element.id);
-              }
-              if (index == cars.length - 1) {
-                console.log("popCarIds");
-                console.log(popCarIds);
-                var secIndex = 0;
-                if (popCarIds.length != 0) {
-                  popCarIds.forEach(function (element) {
-                    cars.splice(cars.findIndex(function (i) {
-                      return i.id == element;
-                    }), 1);
-                    secIndex++;
-                    console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
-                    console.log(cars.length);
-                    if (secIndex == popCarIds.length)
-                      return callback(null, cars);
-                  }, this);
-                } else {
+            // console.log( JSON.parse(JSON.stringify(element.driver())));
+            var driver = JSON.parse(JSON.stringify(element.driver()))
+            // element.driver.get(function (err, driver) {
+            var driverBirthdate = calculateAge(new Date(driver.birthdate))
+            if (driverBirthdate < driverAge.min || driverBirthdate > driverAge.max || (driverGender != undefined && driver.gender != driverGender)) {
+              console.log("push Out")
+              popCarIds.push(element.id);
+            }
+            if (index == cars.length - 1) {
+              console.log("popCarIds");
+              console.log(popCarIds);
+              if (popCarIds.length != 0) {
+                for (let popIndex = 0; popIndex < popCarIds.length; popIndex++) {
+                  const element = popCarIds[popIndex];
+                  cars.splice(cars.findIndex(function (i) {
+                    return i.id == element;
+                  }), 1);
                   console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
                   console.log(cars.length);
-                  return callback(null, cars);
+                  if (popIndex == popCarIds.length - 1)
+                    return callback(null, cars);
                 }
+              } else {
+                console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
+                console.log(cars.length);
+                return callback(null, cars);
               }
-            })
+            }
+            // })
           }
         } else {
           cars.forEach(function (oneCar, carIndex) {
-            oneCar.driver.get(function (err, driver) {
-              driver.driverLangs(function (err, data) {
-                langFilter.forEach(function (oneLangFilter, langIndex) {
-                  var index =
-                    data.find(function (element) {
-                      return element.landuageId == oneLangFilter;
-                    });
-                  var driverBirthdate = calculateAge(driver.birthdate)
-                  if (index == undefined || driverBirthdate < driverAge.min || driverBirthdate > driverAge.max || (driverGender != undefined && driver.gender != driverGender)) {
-                    console.log("push Out")
-                    popCarIds.push(oneCar.id);
-                  }
-                  if (carIndex + 1 == cars.length && langIndex + 1 == langFilter.length) {
-                    console.log("test");
-                    console.log(popCarIds)
-                    var secIndex = 0;
-                    if (popCarIds.length != 0) {
+            var driver = JSON.parse(JSON.stringify(oneCar.driver()))
+            var data = JSON.parse(JSON.stringify(oneCar.driver().driverLangs()))
+            langFilter.forEach(function (oneLangFilter, langIndex) {
+              var index =
+                data.find(function (element) {
+                  return element.landuageId == oneLangFilter;
+                });
+              var driverBirthdate = calculateAge(new Date(driver.birthdate))
+              console.log("driverBirthdate");
+              console.log(driverBirthdate);
+              if (index == undefined || driverBirthdate < driverAge.min || driverBirthdate > driverAge.max || (driverGender != undefined && driver.gender != driverGender)) {
+                console.log("push Out")
+                popCarIds.push(oneCar.id);
+              }
+              if (carIndex + 1 == cars.length && langIndex + 1 == langFilter.length) {
+                console.log("test");
+                console.log(popCarIds)
+                if (popCarIds.length != 0) {
 
-                      popCarIds.forEach(function (element) {
-                        cars.splice(cars.findIndex(function (i) {
-                          return i.id == element;
-                        }), 1);
-                        secIndex++;
-                        console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
-                        console.log(cars.length);
-                        if (secIndex == popCarIds.length)
-                          return callback(null, cars);
-                      }, this);
-                    } else
+                  for (let popIndex = 0; popIndex < popCarIds.length; popIndex++) {
+                    const element = popCarIds[popIndex];
+                    cars.splice(cars.findIndex(function (i) {
+                      return i.id == element;
+                    }), 1);
+                    console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
+                    console.log(cars.length);
+                    if (popIndex == popCarIds.length - 1)
                       return callback(null, cars);
                   }
-                }, this);
-              })
+                } else
+                  return callback(null, cars);
+              }
+            }, this);
 
-            })
           }, this);
         }
       })
