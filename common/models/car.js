@@ -279,14 +279,23 @@ module.exports = function (Car) {
               if (index == cars.length - 1) {
                 console.log("popCarIds");
                 console.log(popCarIds);
-                if (popCarIds.length != 0)
+                var secIndex = 0;
+                if (popCarIds.length != 0) {
                   popCarIds.forEach(function (element) {
                     cars.splice(cars.findIndex(function (i) {
                       return i.id == element;
                     }), 1);
+                    secIndex++;
+                    console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
+                    console.log(cars.length);
+                    if (secIndex == popCarIds.length)
+                      return callback(null, cars);
                   }, this);
-                console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
-                return callback(null, cars);
+                } else {
+                  console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
+                  console.log(cars.length);
+                  return callback(null, cars);
+                }
               }
             })
           }
@@ -307,12 +316,21 @@ module.exports = function (Car) {
                   if (carIndex + 1 == cars.length && langIndex + 1 == langFilter.length) {
                     console.log("test");
                     console.log(popCarIds)
-                    popCarIds.forEach(function (element) {
-                      cars.splice(cars.findIndex(function (i) {
-                        return i.id == element;
-                      }), 1);
-                    }, this);
-                    return callback(null, cars);
+                    var secIndex = 0;
+                    if (popCarIds.length != 0) {
+
+                      popCarIds.forEach(function (element) {
+                        cars.splice(cars.findIndex(function (i) {
+                          return i.id == element;
+                        }), 1);
+                        secIndex++;
+                        console.log("Daaaaaaaaaaaattttttttttttaaaaaaaaaaa")
+                        console.log(cars.length);
+                        if (secIndex == popCarIds.length)
+                          return callback(null, cars);
+                      }, this);
+                    } else
+                      return callback(null, cars);
                   }
                 }, this);
               })
