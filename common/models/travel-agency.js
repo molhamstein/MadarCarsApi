@@ -2,6 +2,10 @@
 
 module.exports = function (Travelagency) {
 
+
+  Travelagency.validatesInclusionOf('type', {
+    in: ['fixed', 'percentage']
+  });
   Travelagency.resetPassword = function (userId, newPassword, callback) {
     var code = 200;
     Travelagency.findById(userId, function (err, userData) {

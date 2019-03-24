@@ -17,9 +17,12 @@ module.exports = function (Firbasetoken) {
     }, function (err, firbacetoken) {
       if (err)
         return callback(err, null);
-      firbacetoken[0].token = token;
-      firbacetoken[0].save()
-      callback(null, code);
+      if (firbacetoken[0] != null) {
+        firbacetoken[0].token = token;
+        firbacetoken[0].save()
+        callback(null, code);
+      } else
+        callback(null, code);
     })
   };
 

@@ -48,7 +48,19 @@
       "type": "date",
       "required": true,
       "defaultFn": "now"
+    },
+    "value": {
+      "type": "number",
+      "required": true,
+      "default": "0"
+
+    },
+    "type": {
+      "type": "string",
+      "required": true,
+      "default": "fixed"
     }
+
   },
   "validations": [],
   "relations": {
