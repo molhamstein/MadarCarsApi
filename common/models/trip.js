@@ -30,7 +30,7 @@ module.exports = function (Trip) {
       cheackCar(data.carId, data.type, bookingDate.where, null, function (err) {
         if (err)
           return next(err)
-        console.log("Done");
+        context.req.body.costBeforCoupon = context.req.body.cost
         if (data['couponId'] == undefined)
           next();
         else {
@@ -54,6 +54,12 @@ module.exports = function (Trip) {
             if (oneCoupon[0].numberOfUsed == oneCoupon[0].numberOfUses)
               oneCoupon[0].status = "used"
             oneCoupon[0].save()
+            var newCost = 0;
+            if (oneCoupon[0].type == "fixed")
+              newCost = context.req.body.costBeforCoupon - oneCoupon[0].value;
+            else if (oneCoupon[0].type == "percentage")
+              newCost = context.req.body.costBeforCoupon - (context.req.body.costBeforCoupon * oneCoupon[0].value / 100)
+            context.req.body.cost = newCost;
             next()
           })
         }
