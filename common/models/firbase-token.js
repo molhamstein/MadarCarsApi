@@ -2,8 +2,8 @@
 
 module.exports = function (Firbasetoken) {
   Firbasetoken.beforeRemote('create', function (context, result, next) {
-    context.req.body.ownerId = context.req.accessToken.userId;
-    next();
+    context.req.body.userId = context.req.accessToken.userId;
+    return next();
   })
 
 
@@ -21,8 +21,16 @@ module.exports = function (Firbasetoken) {
         firbacetoken[0].token = token;
         firbacetoken[0].save()
         callback(null, code);
-      } else
-        callback(null, code);
+      } else {
+        Firbasetoken.create({
+          "deviceId": deviceId,
+          "userId": req.accessToken.userId,
+          "token": token
+        }, function (err, data) {
+          callback(null, code);
+        })
+      }
+
     })
   };
 
