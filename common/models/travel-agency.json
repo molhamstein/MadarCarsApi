@@ -100,7 +100,7 @@
     }
   ],
   "methods": {
-    "resetPassword": {
+    "adminResetPassword": {
       "accepts": [{
           "arg": "userId",
           "type": "string",

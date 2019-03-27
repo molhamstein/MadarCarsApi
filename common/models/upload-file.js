@@ -28,6 +28,11 @@ module.exports = function (Uploadfile) {
     // ulr save thumble
     var urlThumbRootSave = urlFileRoot + '/' + "thumbnail" + '/download/'
 
+    // ulr save thumble
+    var urlWebThumbRootSave = urlFileRoot + '/' + "web-thumbnail" + '/download/'
+
+    
+
     if (process.env.NODE_ENV != undefined) {
       ffmpeg.setFfmpegPath(path.join(config.thumbUrl + config.programFFmpegName[0]));
       ffmpeg.setFfprobePath(path.join(config.thumbUrl + config.programFFmpegName[1]));
@@ -93,9 +98,16 @@ module.exports = function (Uploadfile) {
         }, function (files, err, stdout, stderr) {});
         var parts = file.name.split('.');
         var extension = parts[parts.length - 1];
+        thumb({
+          source: src + "/" + folderName + "/" + file.name, // could be a filename: dest/path/image.jpg
+          destination: src + '/web-thumbnail/',
+          concurrency: 4,
+          width: 1200
+        }, function (files, err, stdout, stderr) {});
         files.push({
           'url': urlFileRootSave + file.name,
-          'thumb': urlThumbRootSave + file.name.substring(0, file.name.lastIndexOf('.')) + "_thumb." + extension
+          'thumb': urlThumbRootSave + file.name.substring(0, file.name.lastIndexOf('.')) + "_thumb." + extension,
+          'web-thumb': urlWebThumbRootSave + file.name.substring(0, file.name.lastIndexOf('.')) + "_thumb." + extension
         });
 
       }
