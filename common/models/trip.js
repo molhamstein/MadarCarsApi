@@ -60,7 +60,16 @@ module.exports = function (Trip) {
             else if (oneCoupon[0].type == "percentage")
               newCost = context.req.body.costBeforCoupon - (context.req.body.costBeforCoupon * oneCoupon[0].value / 100)
             context.req.body.cost = newCost;
-            next()
+            context.req.body.travelAgencyId = oneCoupon[0].travelAgencyId;
+            Trip.app.models.travelAgency.findById(context.req.body.travelAgencyId, function (err, travelAgencyData) {
+              if (err)
+                return next()
+              if (travelAgencyData == null)
+                return next()
+              context.req.body.travelAgencyDiscountType = travelAgencyData.type;
+              context.req.body.travelAgencyDiscountValue = travelAgencyData.value;
+              next()
+            })
           })
         }
       })
@@ -978,6 +987,8 @@ module.exports = function (Trip) {
               "rateId": 1,
               "couponId": 1,
               "travelAgencyId": 1,
+              "travelAgencyDiscountValue":1,
+              "travelAgencyDiscountType":1
             }
           }, {
             $lookup: {

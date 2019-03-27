@@ -125,6 +125,12 @@
       "required": true,
       "default": false
     },
+    "travelAgencyDiscountType": {
+      "type": "string"
+    },
+    "travelAgencyDiscountValue": {
+      "type": "number"
+    },
     "createdAt": {
       "type": "date",
       "required": true,
