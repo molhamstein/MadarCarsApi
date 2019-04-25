@@ -7,7 +7,8 @@
   },
   "replaceOnPUT": false,
   "scope": {
-    "include": [{
+    "include": [
+      {
         "relation": "media"
       },
       {
@@ -89,7 +90,8 @@
       "through": "locationMedia"
     }
   },
-  "acls": [{
+  "acls": [
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -136,63 +138,79 @@
     }
   ],
   "methods": {
-    "deactivate": {
-      "accepts": [{
-        "arg": "id",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
-        }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/deactivate/:id",
-        "verb": "delete"
-      }]
-    },
-    "activate": {
-      "accepts": [{
-        "arg": "id",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
-        }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/activate/:id",
-        "verb": "put"
-      }]
-    },
     "homeStatus": {
       "accepts": [],
-      "returns": [{
-        "arg": "object",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "object",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/homeStatus",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/homeStatus",
+          "verb": "get"
+        }
+      ]
+    },
+    "deactivate": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/deactivate/:id",
+          "verb": "delete"
+        }
+      ]
+    },
+    "activate": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/activate/:id",
+          "verb": "put"
+        }
+      ]
     }
   }
 }

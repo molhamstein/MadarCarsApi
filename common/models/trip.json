@@ -255,6 +255,13 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "addPayment"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
       "principalId": "admin",
       "permission": "ALLOW",
       "property": "getEndByFilter"
@@ -535,6 +542,79 @@
         {
           "path": "/:tripId/editTripCoupon",
           "verb": "put"
+        }
+      ]
+    },
+    "addPayment": {
+      "accepts": [
+        {
+          "arg": "tripId",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
+        },
+        {
+          "arg": "price",
+          "type": "number",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "cardHolderName",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "cardNumber",
+          "type": "number",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "expireMonth",
+          "type": "number",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "expireYear",
+          "type": "number",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "cvc",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "arg": "context",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "context"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/:tripId/addPayment",
+          "verb": "post"
         }
       ]
     }

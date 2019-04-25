@@ -7,8 +7,7 @@
   },
   "replaceOnPUT": false,
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "media"
       },
       {
@@ -60,8 +59,7 @@
       "foreignKey": "mediaId"
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",

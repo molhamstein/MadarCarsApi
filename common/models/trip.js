@@ -2,9 +2,200 @@
 const errors = require('../../server/errors');
 const numHoure = 2;
 var _ = require('lodash');
+var Iyzipay = require('iyzipay');
 
+var iyzipay = new Iyzipay({
+  apiKey: 'sandbox-cevnCuu0d2gZ5X8oYHQtNvHf77eVUdGU',
+  secretKey: 'sandbox-VKspPC8b3ReCcqR85oyUoZGmIFOIVg1M',
+  uri: 'https://sandbox-api.iyzipay.com'
+});
 const type = ['fromAirport', 'city', 'toAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'cityAndToAirport', 'fromAirportAndCityAndToAirport']
 module.exports = function (Trip) {
+
+  Trip.addPayment = function (tripId, price, cardHolderName, cardNumber, expireMonth, expireYear, cvc, context, callback) {
+    var userId = context.req.accessToken.userId
+    Trip.app.models.user.findById(userId, function (err, user) {
+      if (err)
+        return callback(err)
+      var request = {
+        locale: Iyzipay.LOCALE.TR,
+        conversationId: '123456789',
+        price: price,
+        paidPrice: price,
+        currency: Iyzipay.CURRENCY.USD,
+        installment: '1',
+        basketId: 'B67832',
+        paymentChannel: Iyzipay.PAYMENT_CHANNEL.WEB,
+        paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
+        paymentCard: {
+          cardHolderName: cardHolderName,
+          cardNumber: cardNumber,
+          expireMonth: expireMonth,
+          expireYear: expireYear,
+          cvc: cvc,
+          registerCard: '0'
+        },
+        buyer: {
+          id: userId.toString(),
+          name: user.username,
+          surname: user.username,
+          gsmNumber: user.phoneNumber,
+          email: 'admin@admin.com',
+          identityNumber: '123456789',
+          lastLoginDate: '',
+          registrationDate: '',
+          registrationAddress: 'no',
+          ip: '',
+          city: 'no',
+          country: 'no',
+          zipCode: 'no'
+        },
+        billingAddress: {
+          contactName: 'no',
+          city: 'no',
+          country: 'no',
+          address: 'no',
+        },
+        basketItems: [{
+          id: 'BI101',
+          name: 'Binocular',
+          category1: 'Collectibles',
+          category2: 'Accessories',
+          price: price,
+          itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL
+        }]
+      };
+
+
+      Trip.findById(tripId, function (err, trip) {
+        if (err)
+          return callback(err)
+        var request = {
+          locale: Iyzipay.LOCALE.TR,
+          conversationId: tripId.toString(),
+          price: price,
+          paidPrice: price,
+          currency: Iyzipay.CURRENCY.USD,
+          installment: '1',
+          basketId: 'B67832',
+          paymentChannel: Iyzipay.PAYMENT_CHANNEL.WEB,
+          paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
+          paymentCard: {
+            cardHolderName: cardHolderName,
+            cardNumber: cardNumber,
+            expireMonth: expireMonth,
+            expireYear: expireYear,
+            cvc: cvc,
+            registerCard: '0'
+          },
+          buyer: {
+            id: userId.toString(),
+            name: user.username,
+            surname: user.username,
+            gsmNumber: user.phoneNumber,
+            email: 'admin@admin.com',
+            identityNumber: '123456789',
+            lastLoginDate: '',
+            registrationDate: '',
+            registrationAddress: 'no',
+            ip: '',
+            city: 'no',
+            country: 'no',
+            zipCode: 'no'
+          },
+          billingAddress: {
+            contactName: 'no',
+            city: 'no',
+            country: 'no',
+            address: 'no',
+          },
+          basketItems: [{
+            id: 'BI101',
+            name: 'Binocular',
+            category1: 'Collectibles',
+            category2: 'Accessories',
+            price: price,
+            itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL
+          }]
+        };
+        console.log(request);
+        iyzipay.payment.create(request, function (err, result) {
+          if (err)
+            return callback(err)
+          if (result.status != 'success')
+            return callback(null, result);
+          Trip.app.models.payments.create({
+            "price": price,
+            "tripId": tripId,
+            "userId": userId
+          }, function (err, payment) {
+            if (err)
+              return callback(err)
+            return callback(null, payment);
+          })
+        });
+
+      })
+    })
+  }
+  var request = {
+    locale: Iyzipay.LOCALE.TR,
+    conversationId: '123456789',
+    price: '1.2',
+    paidPrice: '1.2',
+    currency: Iyzipay.CURRENCY.USD,
+    installment: '1',
+    basketId: 'B67832',
+    paymentChannel: Iyzipay.PAYMENT_CHANNEL.WEB,
+    paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
+    paymentCard: {
+      cardHolderName: 'John Doe',
+      cardNumber: '4054180000000007',
+      expireMonth: '12',
+      expireYear: '2030',
+      cvc: '123',
+      registerCard: '0'
+    },
+    buyer: {
+      id: 'BY789',
+      name: 'John',
+      surname: 'Doe',
+      gsmNumber: '+905350000000',
+      email: 'email@email.com',
+      identityNumber: '74300864791',
+      lastLoginDate: '2015-10-05 12:43:35',
+      registrationDate: '2013-04-21 15:12:09',
+      registrationAddress: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+      ip: '85.34.78.112',
+      city: 'Istanbul',
+      country: 'Turkey',
+      zipCode: '34732'
+    },
+    shippingAddress: {
+      contactName: 'Jane Doe',
+      city: 'Istanbul',
+      country: 'Turkey',
+      address: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+    },
+    billingAddress: {
+      contactName: 'Jane Doe',
+      city: 'Istanbul',
+      country: 'Turkey',
+      address: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+    },
+    basketItems: [{
+      id: 'BI101',
+      name: 'Binocular',
+      category1: 'Collectibles',
+      category2: 'Accessories',
+      itemType: Iyzipay.BASKET_ITEM_TYPE.PHYSICAL,
+      price: '1.2'
+    }]
+  };
+
+
+
+
   Trip.validatesInclusionOf('type', {
     in: ['city', 'fromAirport', 'toAirport', 'cityAndToAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'fromAirportAndCityAndToAirport']
   });
@@ -987,8 +1178,8 @@ module.exports = function (Trip) {
               "rateId": 1,
               "couponId": 1,
               "travelAgencyId": 1,
-              "travelAgencyDiscountValue":1,
-              "travelAgencyDiscountType":1
+              "travelAgencyDiscountValue": 1,
+              "travelAgencyDiscountType": 1
             }
           }, {
             $lookup: {

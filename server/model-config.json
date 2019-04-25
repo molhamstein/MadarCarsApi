@@ -194,5 +194,9 @@
   "carsAirport": {
     "dataSource": "madarDB",
     "public": true
+  },
+  "payments": {
+    "dataSource": "madarDB",
+    "public": true
   }
 }

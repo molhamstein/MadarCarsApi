@@ -13,8 +13,7 @@
     "realm"
   ],
   "scope": {
-    "include": [
-      {
+    "include": [{
         "relation": "country"
       },
       {
@@ -66,8 +65,7 @@
       }
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "admin",
@@ -108,6 +106,5 @@
         "verb": "put"
       }]
     }
-
   }
 }

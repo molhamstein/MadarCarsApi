@@ -83,48 +83,60 @@
   ],
   "methods": {
     "deactivate": {
-      "accepts": [{
-        "arg": "id",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/deactivate/:id",
-        "verb": "delete"
-      }]
+      "http": [
+        {
+          "path": "/deactivate/:id",
+          "verb": "delete"
+        }
+      ]
     },
     "activate": {
-      "accepts": [{
-        "arg": "id",
-        "type": "string",
-        "required": true,
-        "description": "",
-        "http": {
-          "source": "path"
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "path"
+          }
         }
-      }],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      ],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/activate/:id",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/activate/:id",
+          "verb": "put"
+        }
+      ]
     }
   }
 }

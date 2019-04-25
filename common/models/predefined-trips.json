@@ -135,7 +135,6 @@
       "principalId": "$unauthenticated",
       "permission": "ALLOW"
     }
-
   ],
   "methods": {
     "deactivate": {
