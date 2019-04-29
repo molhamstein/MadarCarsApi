@@ -138,6 +138,133 @@ module.exports = function (Trip) {
       })
     })
   }
+
+  function addPaymentTrip(tripId, cost, data, userId, callback) {
+    Trip.app.models.user.findById(userId, function (err, user) {
+      if (err)
+        return callback(err)
+      // var request = {
+      //   locale: Iyzipay.LOCALE.TR,
+      //   conversationId: '123456789',
+      //   price: cost,
+      //   paidPrice: cost,
+      //   currency: Iyzipay.CURRENCY.USD,
+      //   installment: '1',
+      //   basketId: 'B67832',
+      //   paymentChannel: Iyzipay.PAYMENT_CHANNEL.WEB,
+      //   paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
+      //   paymentCard: {
+      //     cardHolderName: data.cardHolderName,
+      //     cardNumber: data.cardNumber,
+      //     expireMonth: data.expireMonth,
+      //     expireYear: data.expireYear,
+      //     cvc: data.cvc,
+      //     registerCard: '0'
+      //   },
+      //   buyer: {
+      //     id: userId.toString(),
+      //     name: user.username,
+      //     surname: user.username,
+      //     gsmNumber: user.phoneNumber,
+      //     email: 'admin@admin.com',
+      //     identityNumber: '123456789',
+      //     lastLoginDate: '',
+      //     registrationDate: '',
+      //     registrationAddress: 'no',
+      //     ip: '',
+      //     city: 'no',
+      //     country: 'no',
+      //     zipCode: 'no'
+      //   },
+      //   billingAddress: {
+      //     contactName: 'no',
+      //     city: 'no',
+      //     country: 'no',
+      //     address: 'no',
+      //   },
+      //   basketItems: [{
+      //     id: 'BI101',
+      //     name: 'Binocular',
+      //     category1: 'Collectibles',
+      //     category2: 'Accessories',
+      //     price: price,
+      //     itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL
+      //   }]
+      // };
+
+
+      Trip.findById(tripId, function (err, trip) {
+        if (err)
+          return callback(err)
+        var request = {
+          locale: Iyzipay.LOCALE.TR,
+          conversationId: tripId.toString(),
+          price: cost,
+          paidPrice: cost,
+          currency: Iyzipay.CURRENCY.USD,
+          installment: '1',
+          basketId: 'B67832',
+          paymentChannel: Iyzipay.PAYMENT_CHANNEL.WEB,
+          paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
+          paymentCard: {
+            cardHolderName: data.cardHolderName,
+            cardNumber: data.cardNumber,
+            expireMonth: data.expireMonth,
+            expireYear: data.expireYear,
+            cvc: data.cvc,
+            registerCard: '0'
+          },
+          buyer: {
+            id: userId.toString(),
+            name: user.username,
+            surname: user.username,
+            gsmNumber: user.phoneNumber,
+            email: 'admin@admin.com',
+            identityNumber: '123456789',
+            lastLoginDate: '',
+            registrationDate: '',
+            registrationAddress: 'no',
+            ip: '',
+            city: 'no',
+            country: 'no',
+            zipCode: 'no'
+          },
+          billingAddress: {
+            contactName: 'no',
+            city: 'no',
+            country: 'no',
+            address: 'no',
+          },
+          basketItems: [{
+            id: 'BI101',
+            name: 'Binocular',
+            category1: 'Collectibles',
+            category2: 'Accessories',
+            price: cost,
+            itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL
+          }]
+        };
+        console.log(request);
+        iyzipay.payment.create(request, function (err, result) {
+          if (err)
+            return callback(err)
+          if (result.status != 'success')
+            return callback(errors.trip.paymentInfo())
+          Trip.app.models.payments.create({
+            "price": cost,
+            "tripId": tripId,
+            "userId": userId
+          }, function (err, payment) {
+            if (err)
+              return callback(err)
+            return callback(null, payment);
+          })
+        });
+
+      })
+    })
+  }
+
   var request = {
     locale: Iyzipay.LOCALE.TR,
     conversationId: '123456789',
@@ -206,9 +333,17 @@ module.exports = function (Trip) {
 
   Trip.beforeRemote('create', function (context, result, next) {
     var data = context.req.body;
+    var withPayment = false
     if (context.req.body.ownerId == null)
       context.req.body.ownerId = context.req.accessToken.userId;
-
+    if (context.req.body.withPayment == true) {
+      context.req.tempBody = {}
+      context.req.tempBody.withPayment = true;
+      context.req.tempBody.paymentData = context.req.body.paymentData;
+      delete context.req.body.paymentData;
+      delete context.req.body.withPayment;
+      context.req.body.isCompletedPayment = false
+    }
     var bookingDate = fillDateOfBooking(data)
     context.req.body.startDate = bookingDate.start;
     context.req.body.endDate = bookingDate.end;
@@ -267,23 +402,45 @@ module.exports = function (Trip) {
     })
   })
   Trip.afterRemote('create', function (ctx, result, next) {
+    console.log("ctx.req.tempBody");
+    console.log(ctx.req.tempBody);
     var bookingData = prepareCarBooking(result);
-    console.log(bookingData);
     Trip.app.models.bookingCar.create(bookingData, function (err, data) {
       if (err)
         return next(err);
       _.each(ctx.req.body.tripSublocations, oneSublocation => {
         oneSublocation.tripId = result.id;
       })
-      console.log(ctx.req.body.tripSublocations)
       if (ctx.req.body.tripSublocations)
         Trip.app.models.tripSublocation.create(ctx.req.body.tripSublocations, function (err, data) {
           if (err)
             return next(err);
-          next();
+          if (ctx.req.tempBody) {
+            addPaymentTrip(result.id, result.cost, ctx.req.tempBody.paymentData, result.ownerId, function (err, data) {
+              if (err)
+                return next(err);
+              else {
+                result.isCompletedPayment = true;
+                result.save();
+                return next();
+              }
+            })
+          } else
+            return next();
         })
       else {
-        next()
+        if (ctx.req.tempBody) {
+          addPaymentTrip(result.id, result.cost, ctx.req.tempBody.paymentData, result.ownerId, function (err, data) {
+            if (err)
+              return next(err);
+            else {
+              result.isCompletedPayment = true;
+              result.save();
+              return next();
+            }
+          })
+        } else
+          return next();
       }
 
     })
