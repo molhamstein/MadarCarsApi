@@ -130,15 +130,15 @@
     "travelAgencyDiscountValue": {
       "type": "number"
     },
-    "isPaid": {
-      "type": "boolean",
+    "paymentType": {
+      "type": "string",
       "required": true,
-      "default": false
+      "default": "none"
     },
-    "isCompletedPayment": {
-      "type": "boolean",
+    "paymentStatus": {
+      "type": "string",
       "required": true,
-      "default": true
+      "default": "notPaid"
     },
     "createdAt": {
       "type": "date",

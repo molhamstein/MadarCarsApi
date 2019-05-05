@@ -123,7 +123,7 @@ module.exports = function (Trip) {
           if (err)
             return callback(err)
           if (result.status != 'success')
-            return callback(null, result);
+            return callback(errors.trip.paymentInfo(tripId))
           Trip.app.models.payments.create({
             "price": price,
             "tripId": tripId,
@@ -216,8 +216,8 @@ module.exports = function (Trip) {
           },
           buyer: {
             id: userId.toString(),
-            name: user.username,
-            surname: user.username,
+            name: user.name,
+            surname: user.name,
             gsmNumber: user.phoneNumber,
             email: 'admin@admin.com',
             identityNumber: '123456789',
@@ -248,8 +248,10 @@ module.exports = function (Trip) {
         iyzipay.payment.create(request, function (err, result) {
           if (err)
             return callback(err)
-          if (result.status != 'success')
-            return callback(errors.trip.paymentInfo())
+          if (result.status != 'success') {
+            console.log(result)
+            return callback(errors.trip.paymentInfo(tripId))
+          }
           Trip.app.models.payments.create({
             "price": cost,
             "tripId": tripId,
@@ -327,8 +329,15 @@ module.exports = function (Trip) {
     in: ['city', 'fromAirport', 'toAirport', 'cityAndToAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'fromAirportAndCityAndToAirport']
   });
 
-  Trip.validatesInclusionOf('status', {
-    in: ['pending', 'approved', 'active', 'deactive', 'finished']
+  Trip.validatesInclusionOf('type', {
+    in: ['city', 'fromAirport', 'toAirport', 'cityAndToAirport', 'fromAirportAndCity', 'fromAirportAndToAirport', 'fromAirportAndCityAndToAirport']
+  });
+
+  Trip.validatesInclusionOf('paymentType', {
+    in: ['electronicPayment', 'cash', 'none']
+  });
+  Trip.validatesInclusionOf('paymentStatus', {
+    in: ['notPaid', 'problemInPayment', 'paid']
   });
 
   Trip.beforeRemote('create', function (context, result, next) {
@@ -342,8 +351,13 @@ module.exports = function (Trip) {
       context.req.tempBody.paymentData = context.req.body.paymentData;
       delete context.req.body.paymentData;
       delete context.req.body.withPayment;
-      context.req.body.isCompletedPayment = false
+      context.req.body.paymentStatus = "problemInPayment"
+      context.req.body.paymentType = "electronicPayment"
+    } else if (context.req.body.withPayment == false) {
+      delete context.req.body.paymentData;
+      delete context.req.body.withPayment;
     }
+
     var bookingDate = fillDateOfBooking(data)
     context.req.body.startDate = bookingDate.start;
     context.req.body.endDate = bookingDate.end;
@@ -420,7 +434,7 @@ module.exports = function (Trip) {
               if (err)
                 return next(err);
               else {
-                result.isCompletedPayment = true;
+                result.paymentStatus = "paid";
                 result.save();
                 return next();
               }
@@ -434,7 +448,7 @@ module.exports = function (Trip) {
             if (err)
               return next(err);
             else {
-              result.isCompletedPayment = true;
+              result.paymentStatus = "paid";
               result.save();
               return next();
             }
@@ -1334,6 +1348,8 @@ module.exports = function (Trip) {
               "startDate": 1,
               "rateId": 1,
               "couponId": 1,
+              "paymentStatus": 1,
+              "paymentType": 1,
               "travelAgencyId": 1,
               "travelAgencyDiscountValue": 1,
               "travelAgencyDiscountType": 1

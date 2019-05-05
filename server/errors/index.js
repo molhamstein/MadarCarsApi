@@ -45,8 +45,8 @@ module.exports.trip = {
   tripNotFound: function () {
     return new cError(458, 'trip not found', 458);
   },
-  paymentInfo: function () {
-    return new cError(463, 'payment info is wrong', 463);
+  paymentInfo: function (details) {
+    return new cError(463, 'payment info is wrong', 463,details);
   }
 
 };

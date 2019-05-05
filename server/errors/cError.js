@@ -20,7 +20,8 @@ class cError extends Error {
       name: this.name,
       code: this.code,
       message: this.message,
-      statusCode: this.statusCode
+      statusCode: this.statusCode,
+      details:this.details
     }
   }
 }
