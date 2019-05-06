@@ -75,7 +75,19 @@ module.exports = function (Trip) {
             return callback(err)
           if (result.status != 'success') {
             console.log(result);
-            return callback(errors.trip.paymentInfo(tripId))
+            if (result.errorCode == 12) {
+              return callback(errors.trip.cardNumberIsInvalid(tripId))
+            } else if (result.errorCode == 17 || result.errorCode == 14) {
+              return callback(errors.trip.expireDateIsInvalid(tripId))
+            } else if (result.errorCode == 15) {
+              return callback(errors.trip.cvcIsInvalid(tripId))
+            } else if (result.errorCode == 5184) {
+              return callback(errors.trip.domesticCards(tripId))
+            } else if (result.errorCode == 5008) {
+              return callback(errors.trip.priceInformation(tripId))
+            } else {
+              return callback(errors.trip.paymentInfo(tripId))
+            }
           }
           Trip.app.models.payments.create({
             "price": price,

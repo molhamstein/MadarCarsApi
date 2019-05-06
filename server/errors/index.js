@@ -46,8 +46,28 @@ module.exports.trip = {
     return new cError(458, 'trip not found', 458);
   },
   paymentInfo: function (details) {
-    return new cError(463, 'payment info is wrong', 463,details);
+    return new cError(463, 'payment info is wrong', 463, details);
+  },
+  cardNumberIsInvalid: function (details) {
+    return new cError(464, 'card number is invalid', 464, details);
+  },
+
+  expireDateIsInvalid: function (details) {
+    return new cError(465, 'expire date is invalid', 465, details);
+  },
+  cvcIsInvalid: function (details) {
+    return new cError(466, 'cvc is invalid', 466, details);
+  },
+  domesticCards: function (details) {
+    return new cError(467, 'domestic cards', 467, details);
+  },
+  priceInformation: function (details) {
+    return new cError(468, 'price information', 468, details);
   }
+
+
+
+
 
 };
 
