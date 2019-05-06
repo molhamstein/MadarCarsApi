@@ -17,55 +17,6 @@ module.exports = function (Trip) {
     Trip.app.models.user.findById(userId, function (err, user) {
       if (err)
         return callback(err)
-      var request = {
-        locale: Iyzipay.LOCALE.TR,
-        conversationId: '123456789',
-        price: price,
-        paidPrice: price,
-        currency: Iyzipay.CURRENCY.USD,
-        installment: '1',
-        basketId: 'B67832',
-        paymentChannel: Iyzipay.PAYMENT_CHANNEL.WEB,
-        paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
-        paymentCard: {
-          cardHolderName: cardHolderName,
-          cardNumber: cardNumber,
-          expireMonth: expireMonth,
-          expireYear: expireYear,
-          cvc: cvc,
-          registerCard: '0'
-        },
-        buyer: {
-          id: userId.toString(),
-          name: user.username,
-          surname: user.username,
-          gsmNumber: user.phoneNumber,
-          email: 'admin@admin.com',
-          identityNumber: '123456789',
-          lastLoginDate: '',
-          registrationDate: '',
-          registrationAddress: 'no',
-          ip: '',
-          city: 'no',
-          country: 'no',
-          zipCode: 'no'
-        },
-        billingAddress: {
-          contactName: 'no',
-          city: 'no',
-          country: 'no',
-          address: 'no',
-        },
-        basketItems: [{
-          id: 'BI101',
-          name: 'Binocular',
-          category1: 'Collectibles',
-          category2: 'Accessories',
-          price: price,
-          itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL
-        }]
-      };
-
 
       Trip.findById(tripId, function (err, trip) {
         if (err)
@@ -90,8 +41,8 @@ module.exports = function (Trip) {
           },
           buyer: {
             id: userId.toString(),
-            name: user.username,
-            surname: user.username,
+            name: user.name,
+            surname: user.name,
             gsmNumber: user.phoneNumber,
             email: 'admin@admin.com',
             identityNumber: '123456789',
@@ -122,8 +73,10 @@ module.exports = function (Trip) {
         iyzipay.payment.create(request, function (err, result) {
           if (err)
             return callback(err)
-          if (result.status != 'success')
+          if (result.status != 'success') {
+            console.log(result);
             return callback(errors.trip.paymentInfo(tripId))
+          }
           Trip.app.models.payments.create({
             "price": price,
             "tripId": tripId,
@@ -131,6 +84,9 @@ module.exports = function (Trip) {
           }, function (err, payment) {
             if (err)
               return callback(err)
+
+            trip.paymentStatus = "paid";
+            trip.save();
             return callback(null, payment);
           })
         });
@@ -143,56 +99,6 @@ module.exports = function (Trip) {
     Trip.app.models.user.findById(userId, function (err, user) {
       if (err)
         return callback(err)
-      // var request = {
-      //   locale: Iyzipay.LOCALE.TR,
-      //   conversationId: '123456789',
-      //   price: cost,
-      //   paidPrice: cost,
-      //   currency: Iyzipay.CURRENCY.USD,
-      //   installment: '1',
-      //   basketId: 'B67832',
-      //   paymentChannel: Iyzipay.PAYMENT_CHANNEL.WEB,
-      //   paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
-      //   paymentCard: {
-      //     cardHolderName: data.cardHolderName,
-      //     cardNumber: data.cardNumber,
-      //     expireMonth: data.expireMonth,
-      //     expireYear: data.expireYear,
-      //     cvc: data.cvc,
-      //     registerCard: '0'
-      //   },
-      //   buyer: {
-      //     id: userId.toString(),
-      //     name: user.username,
-      //     surname: user.username,
-      //     gsmNumber: user.phoneNumber,
-      //     email: 'admin@admin.com',
-      //     identityNumber: '123456789',
-      //     lastLoginDate: '',
-      //     registrationDate: '',
-      //     registrationAddress: 'no',
-      //     ip: '',
-      //     city: 'no',
-      //     country: 'no',
-      //     zipCode: 'no'
-      //   },
-      //   billingAddress: {
-      //     contactName: 'no',
-      //     city: 'no',
-      //     country: 'no',
-      //     address: 'no',
-      //   },
-      //   basketItems: [{
-      //     id: 'BI101',
-      //     name: 'Binocular',
-      //     category1: 'Collectibles',
-      //     category2: 'Accessories',
-      //     price: price,
-      //     itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL
-      //   }]
-      // };
-
-
       Trip.findById(tripId, function (err, trip) {
         if (err)
           return callback(err)
@@ -436,7 +342,16 @@ module.exports = function (Trip) {
               else {
                 result.paymentStatus = "paid";
                 result.save();
-                return next();
+                Trip.app.models.payments.create({
+                  "price": result.cost,
+                  "tripId": result.id,
+                  "userId": result.ownerId
+                }, function (err, payment) {
+                  if (err)
+                    return callback(err)
+
+                  return next();
+                })
               }
             })
           } else
@@ -450,7 +365,16 @@ module.exports = function (Trip) {
             else {
               result.paymentStatus = "paid";
               result.save();
-              return next();
+              Trip.app.models.payments.create({
+                "price": result.cost,
+                "tripId": result.id,
+                "userId": result.ownerId
+              }, function (err, payment) {
+                if (err)
+                  return callback(err)
+
+                return next();
+              })
             }
           })
         } else
