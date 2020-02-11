@@ -580,6 +580,7 @@ module.exports = function(Trip) {
       .toFile(path.resolve("../../../../madarImage/uploadFiles/pdf") + '/' + file, (error, res) => {
         console.log(path.resolve("../../../../madarImage/uploadFiles/pdf") + '/' + file);
         console.log(res);
+        console.log(error);
         resolve({ error: error, res: file });
       });
     });
