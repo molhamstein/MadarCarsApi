@@ -571,7 +571,7 @@ module.exports = function(Trip) {
         renderDelay: 1000,
         format: "A4",
         orientation: "portrait",
-        base: "file:///D:/Workspace/Git Projects/MadarCarsApi/templates/trip/",
+        base: "/home/MadarCarsApi/templates/trip/",
         height: "118"
       };
     return new Promise((resolve, reject) => {
