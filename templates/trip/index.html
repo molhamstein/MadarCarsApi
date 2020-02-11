@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @font-face {
+            font-family: "MullerRegular";
+            src: url("fonts/MullerRegular.otf") format("opentype");
+        }
+
+        @font-face {
+            font-family: "MullerBold";
+            src: url("fonts/MullerBold.otf") format("opentype");
+        }
+
+        @font-face {
+            font-family: "MullerMedium";
+            src: url("fonts/MullerMedium.otf") format("opentype");
+        }
+
+        html {
+            width: 21cm;
+            height: 29.65cm;
+        }
+
+        body {
+            background-image: linear-gradient(to top left, #9078F7, #EDBACB);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .header-paragraph {
+            margin-left: 30px;
+            color: white;
+            font-family: "MullerRegular";
+            font-size: 1.3rem;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .content {
+            border-radius: 20px;
+            background-color: white;
+            width: 85%;
+            margin: 0 auto;
+            height: 100%;
+            padding: 20px 30px;
+
+        }
+
+        .date {
+            display: inline-block;
+            margin-top: 0px;
+            padding-right: 15px;
+        }
+
+        .date-label {
+            color: #888888;
+            font-family: MullerMedium;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .date-value {
+            color: #555555;
+            font-family: MullerMedium;
+            font-size: 2.3rem;
+            margin-top: 0px;
+        }
+
+        img {
+            float: right;
+            width: 20%;
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        .name {
+            font-family: MullerBold;
+            font-size: 2.3rem;
+
+            margin-bottom: 10px;
+            margin-top: 10px;
+            color: #555555;
+        }
+
+        .sub-name {
+            font-family: MullerMedium;
+            font-size: 2rem;
+            margin-top: 0px;
+            margin-bottom: 5px;
+            color: #888888;
+        }
+
+        .chip-badge {
+            background-color: #9078F7;
+            border-radius: 50px;
+            font-family: MullerBold;
+            font-size: 1.2rem;
+            display: inline-block;
+            color: white;
+            padding: 10px 30px;
+        }
+
+
+
+        table {
+            width: 95%;
+            margin: 0 auto;
+            font-family: MullerBold;
+            font-size: 1.2rem;
+            color: #555555;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        tr.border {
+            border-bottom: 2px solid #555555;
+        }
+
+        td {
+            padding: 15px;
+            padding-left: 0px;
+            text-align: left;
+        }
+
+        td:nth-child(even) {
+            text-align: right;
+            padding-right: 0px;
+        }
+
+        .cost-paragraph {
+            font-family: MullerBold;
+            font-size: 2rem;
+            display: inline-block;
+            float: left;
+            margin-bottom: 0px;
+
+        }
+
+        .cost-value {
+            font-family: MullerBold;
+            text-align: right;
+            font-size: 5rem;
+            color: #555555;
+            margin-bottom: 0px;
+            margin-top: -10px;
+            padding-right: 20px;
+        }
+
+        .dollar {
+            font-family: MullerBold;
+            text-align: right;
+            font-size: 2rem;
+            color: #555555;
+            margin: 0px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <p class="header-paragraph"> Trip reservation for Mr. <%= trip.ownerName %> </p>
+
+    <div class="content">
+
+        <div>
+            <div class="date">
+                <p class="date-label"> Start Date </p>
+                <p class="date-value"> <%= trip.startDate %> </p>
+            </div>
+            <div class="date">
+                <p class="date-label"> End Date </p>
+                <p class="date-value"> <%= trip.endDate %> </p>
+            </div>
+
+            <img alt="logo" title="logo" src="{{image}}">
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div style="margin-bottom: 20px;">
+            <p class="name"> <%= trip.carBrandName %> </p>
+            <p class="sub-name"> <%= trip.carOwnerName %> </p>
+            <% trip.driverLangs.forEach(function(lang) { %>
+            <div class="chip-badge"><%= lang %></div>
+            <% }) %>
+        </div>
+
+        <table>
+            <% trip.tripSublocations.forEach(function(tripSublocation) { %>
+            <tr class="border">
+                <td style="width: 75%"><%= tripSublocation.locationName %></td>
+                <td><%= tripSublocation.duration %></td>
+            </tr>
+            <% }) %>
+            <% for(let i = 0; i < 10 - trip.tripSublocations.length; i++) { %>
+            <tr style="width: 75%; height: 50px;">
+                <td></td>
+                <td></td>
+            </tr>
+            <% } %>
+        </table>
+
+
+        <div style="margin: 0px;">
+            <p class="dollar"> $ </p>
+        </div>
+
+        <div>
+            <p class="cost-paragraph"> Estim Cost </p>
+            <p class="cost-value"> <%= trip.tripCost %> </p>
+        </div>
+    </div>
+</body>
+
+</html>

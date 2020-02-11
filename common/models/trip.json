@@ -7,7 +7,8 @@
   },
   "replaceOnPUT": false,
   "scope": {
-    "include": [{
+    "include": [
+      {
         "relation": "owner"
       },
       {
@@ -34,6 +35,11 @@
     ]
   },
   "properties": {
+    "pdfPath": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    },
     "status": {
       "type": "string",
       "required": true,
@@ -221,7 +227,8 @@
       }
     }
   },
-  "acls": [{
+  "acls": [
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -297,74 +304,114 @@
     }
   ],
   "methods": {
-    "getEndByFilter": {
+    "createPdf": {
       "accepts": [{
-        "arg": "filter",
-        "type": "object",
-        "required": false,
-        "description": "",
-        "http": {
-          "source": "query"
-        }
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/getEndByFilter",
-        "verb": "get"
-      }]
-    },
-    "getTripByFilter": {
-      "accepts": [{
-        "arg": "filter",
-        "type": "object",
-        "required": false,
-        "description": "",
-        "http": {
-          "source": "query"
-        }
-      }],
-      "returns": [{
-        "arg": "result",
-        "type": "array",
-        "root": true,
-        "description": ""
-      }],
-      "description": "",
-      "http": [{
-        "path": "/getTripByFilter",
-        "verb": "get"
-      }]
-    },
-    "getMyTrip": {
-      "accepts": [{
-        "arg": "req",
-        "type": "object",
+        "arg": "id",
+        "type": "string",
         "required": true,
         "description": "",
         "http": {
-          "source": "req"
+          "source": "path"
         }
       }],
       "returns": [{
-        "arg": "result",
-        "type": "array",
+        "arg": "object",
+        "type": "object",
         "root": true,
         "description": ""
       }],
-      "description": "",
       "http": [{
-        "path": "/getMyTrip",
-        "verb": "get"
+        "path": "/:id/createPdf",
+        "verb": "put"
       }]
     },
+    "getEndByFilter": {
+      "accepts": [
+        {
+          "arg": "filter",
+          "type": "object",
+          "required": false,
+          "description": "",
+          "http": {
+            "source": "query"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/getEndByFilter",
+          "verb": "get"
+        }
+      ]
+    },
+    "getTripByFilter": {
+      "accepts": [
+        {
+          "arg": "filter",
+          "type": "object",
+          "required": false,
+          "description": "",
+          "http": {
+            "source": "query"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/getTripByFilter",
+          "verb": "get"
+        }
+      ]
+    },
+    "getMyTrip": {
+      "accepts": [
+        {
+          "arg": "req",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "req"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/getMyTrip",
+          "verb": "get"
+        }
+      ]
+    },
     "changeStatus": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "id",
           "type": "string",
           "required": true,
@@ -380,20 +427,25 @@
           "description": ""
         }
       ],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/changeStatus/:id",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/changeStatus/:id",
+          "verb": "put"
+        }
+      ]
     },
     "changemyTripStatus": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "id",
           "type": "string",
           "required": true,
@@ -418,20 +470,25 @@
           }
         }
       ],
-      "returns": [{
-        "arg": "result",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/changemyTripStatus/:id",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/changemyTripStatus/:id",
+          "verb": "put"
+        }
+      ]
     },
     "editMethod": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "data",
           "type": "object",
           "required": true,
@@ -456,34 +513,43 @@
           }
         }
       ],
-      "returns": [{
-        "arg": "data",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "data",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/editMethod/:id",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/editMethod/:id",
+          "verb": "put"
+        }
+      ]
     },
     "solvedTrip": {
       "accepts": [],
-      "returns": [{
-        "arg": "data",
-        "type": "object",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "data",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/solvedTrip",
-        "verb": "get"
-      }]
+      "http": [
+        {
+          "path": "/solvedTrip",
+          "verb": "get"
+        }
+      ]
     },
     "editTripCoupon": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "tripId",
           "type": "string",
           "required": true,
@@ -499,20 +565,25 @@
           "description": ""
         }
       ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/:tripId/editTripCoupon",
-        "verb": "put"
-      }]
+      "http": [
+        {
+          "path": "/:tripId/editTripCoupon",
+          "verb": "put"
+        }
+      ]
     },
     "addPayment": {
-      "accepts": [{
+      "accepts": [
+        {
           "arg": "tripId",
           "type": "string",
           "required": true,
@@ -567,17 +638,21 @@
           }
         }
       ],
-      "returns": [{
-        "arg": "code",
-        "type": "number",
-        "root": true,
-        "description": ""
-      }],
+      "returns": [
+        {
+          "arg": "code",
+          "type": "number",
+          "root": true,
+          "description": ""
+        }
+      ],
       "description": "",
-      "http": [{
-        "path": "/:tripId/addPayment",
-        "verb": "post"
-      }]
+      "http": [
+        {
+          "path": "/:tripId/addPayment",
+          "verb": "post"
+        }
+      ]
     }
   }
 }
