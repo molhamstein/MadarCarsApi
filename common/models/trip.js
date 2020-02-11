@@ -578,6 +578,7 @@ module.exports = function(Trip) {
       pdf
       .create(html_body, options)
       .toFile(path.resolve("../../../../madarImage/uploadFiles/pdf/") + file, (error, res) => {
+        console.log(path.resolve("../../../../madarImage/uploadFiles/pdf/") + file);
         console.log(res);
         resolve({ error: error, res: file });
       });
