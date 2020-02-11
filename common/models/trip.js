@@ -577,8 +577,8 @@ module.exports = function(Trip) {
     return new Promise((resolve, reject) => {
       pdf
       .create(html_body, options)
-      .toFile(path.resolve("../../../../madarImage/uploadFiles/pdf") + '/' + file, (error, res) => {
-        console.log(path.resolve("../../../../madarImage/uploadFiles/pdf") + '/' + file);
+      .toFile(path.resolve(__dirname + "../../../../madarImage/uploadFiles/pdf") + '/' + file, (error, res) => {
+        console.log(path.resolve(__dirname + "../../../../madarImage/uploadFiles/pdf") + '/' + file);
         console.log(res);
         console.log(error);
         resolve({ error: error, res: file });
