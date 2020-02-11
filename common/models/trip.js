@@ -1,9 +1,10 @@
 "use strict";
 const errors = require("../../server/errors");
 const numHoure = 2;
+const configPath = process.env.NODE_ENV === undefined ? '../../server/config.json' : `../../server/config.${process.env.NODE_ENV}.json`;
+const config = require(configPath);
 var _ = require("lodash");
 var Iyzipay = require("iyzipay");
-
 var iyzipay = new Iyzipay({
   apiKey: "sandbox-cevnCuu0d2gZ5X8oYHQtNvHf77eVUdGU",
   secretKey: "sandbox-VKspPC8b3ReCcqR85oyUoZGmIFOIVg1M",
@@ -129,7 +130,7 @@ module.exports = function(Trip) {
       var trip = await Trip.findById(tripId);
       if (trip) {
         let {res, error} = await generatePdf(trip);
-        await trip.updateAttribute("pdfPath", res);
+        await trip.updateAttribute("pdfPath", config.siteDomain + "/api/uploadFiles/pdf/download/" + res);
         callback(null, trip);
       }
     } catch(error) {
