@@ -127,6 +127,8 @@ module.exports = function(Trip) {
 
   Trip.createPdf = async function(tripId, callback) {
     try {
+      var path = require("path");
+      console.log("file://" + path.resolve("templates/trip/"))
       var trip = await Trip.findById(tripId);
       if (trip) {
         let {res, error} = await generatePdf(trip);
@@ -552,14 +554,19 @@ module.exports = function(Trip) {
       );
       var car = trip.car();
       var html_body = renderer({ trip: {
-        ownerName: trip.owner().name,
-        startDate: trip.startDate.toLocaleDateString(),
+        "ownerName": trip.owner().name,
+        "locationName": trip.location().nameEn,
+        "duration": trip.daysInCity,
+        "startDate": trip.startDate.toLocaleDateString(),
         "endDate": trip.endDate.toLocaleDateString(),
         "carBrandName": car.brand().nameEn,
         "carOwnerName": car.name,
         "driverLangs": trip.driver().driverLangs().map((driverLang) => driverLang.language().name),
         "tripSublocations": trip.tripSublocations().map((tripSublocation) => ({ locationName: tripSublocation.subLocation().nameEn, duration: tripSublocation.duration })),
-        "tripCost": trip.cost
+        "tripCost": trip.cost,
+        "fromAirport": trip.fromAirport,
+        "toAirport": trip.toAirport,
+        "airportName": (trip.airport() || { nameEn: "Airport" }).nameEn
       } });
       const file = `trip-${trip.id}.pdf`;
       var image = path.join(
@@ -567,21 +574,19 @@ module.exports = function(Trip) {
         __dirname,
         "../../templates/trip/jaw_logo-01.png"
       );
+      console.log("file://" + path.resolve("templates/trip/"));
       html_body = html_body.split("{{image}}").join(image);
       let options = {
         renderDelay: 1000,
         format: "A4",
         orientation: "portrait",
-        base: "/home/MadarCarsApi/templates/trip/",
+        base: path.resolve("templates/trip/"),
         height: "118"
       };
     return new Promise((resolve, reject) => {
       pdf
       .create(html_body, options)
       .toFile(path.resolve(__dirname + "../../../../madarImage/uploadFiles/pdf") + '/' + file, (error, res) => {
-        console.log(path.resolve(__dirname + "../../../../madarImage/uploadFiles/pdf") + '/' + file);
-        console.log(res);
-        console.log(error);
         resolve({ error: error, res: file });
       });
     });
